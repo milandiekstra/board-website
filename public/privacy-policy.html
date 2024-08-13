@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="nl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacybeleid - BOARD</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- GSAP en plugins -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollToPlugin.min.js"></script>
+
+    <style>
+        .animate-fade-in {
+            opacity: 1 !important;
+            transition: opacity 0.5s ease-in-out;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="bg-white shadow-md fixed w-full z-10">
+        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <div class="flex items-center">
+                <span class="text-2xl font-bold text-black">BOARD</span>
+            </div>
+            <div class="hidden md:flex items-center space-x-4">
+                <a href="index.html#home" class="text-gray-800 hover:text-blue-600">Home</a>
+                <a href="index.html#voordelen" class="text-gray-800 hover:text-blue-600">Voordelen</a>
+                <a href="index.html#pilot" class="text-gray-800 hover:text-blue-600">Pilotprogramma</a>
+                <a href="dashboards.html" class="text-gray-800 hover:text-blue-600">Dashboards</a>
+                <a href="index.html#over-ons" class="text-gray-800 hover:text-blue-600">Over Ons</a>
+                <a href="index.html#contact" class="text-gray-800 hover:text-blue-600">Contact</a>
+            </div>
+            <a href="index.html#pilot"
+                class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300">Doe mee
+                aan de pilot</a>
+        </nav>
+    </header>
+
+    <main class="pt-20 pb-16">
+        <section class="container mx-auto px-6">
+            <h1 class="text-4xl font-bold mb-8 text-center">Privacybeleid</h1>
+            <div class="prose max-w-3xl mx-auto">
+                <p class="mb-4">Laatst bijgewerkt: [Datum]</p>
+                <p class="mb-4">BOARD B.V. ("wij", "ons", of "onze") exploiteert de website https://www.boardapp.nl (de
+                    "Service"). Deze pagina informeert u over ons beleid met betrekking tot de verzameling, het gebruik
+                    en de openbaarmaking van persoonlijke gegevens wanneer u onze Service gebruikt.</p>
+
+                <h2 class="text-2xl font-semibold mt-8 mb-4">Verzameling en gebruik van informatie</h2>
+                <p class="mb-4">We verzamelen verschillende soorten informatie voor verschillende doeleinden om onze
+                    Service aan u te leveren en te verbeteren.</p>
+
+                <h3 class="text-xl font-semibold mt-6 mb-3">Persoonsgegevens</h3>
+                <p class="mb-4">Tijdens het gebruik van onze Service kunnen we u vragen om ons bepaalde persoonlijk
+                    identificeerbare informatie te verstrekken die kan worden gebruikt om contact met u op te nemen of u
+                    te identificeren ("Persoonsgegevens"). Persoonlijk identificeerbare informatie kan omvatten, maar is
+                    niet beperkt tot:</p>
+                <ul class="list-disc pl-6 mb-4">
+                    <li>E-mailadres</li>
+                    <li>Voor- en achternaam</li>
+                    <li>Telefoonnummer</li>
+                    <li>Adres, staat, provincie, postcode, stad</li>
+                    <li>Cookies en gebruiksgegevens</li>
+                </ul>
+
+                <h2 class="text-2xl font-semibold mt-8 mb-4">Gebruik van gegevens</h2>
+                <p class="mb-4">BOARD B.V. gebruikt de verzamelde gegevens voor verschillende doeleinden:</p>
+                <ul class="list-disc pl-6 mb-4">
+                    <li>Om onze Service te leveren en te onderhouden</li>
+                    <li>Om u wijzigingen in onze Service mee te delen</li>
+                    <li>Om u de mogelijkheid te bieden deel te nemen aan de interactieve functies van onze Service
+                        wanneer u daarvoor kiest</li>
+                    <li>Om klantenondersteuning te bieden</li>
+                    <li>Om analyse- of waardevolle informatie te verzamelen zodat we onze Service kunnen verbeteren</li>
+                    <li>Om het gebruik van de Service te monitoren</li>
+                    <li>Om technische problemen te detecteren, te voorkomen en aan te pakken</li>
+                </ul>
+
+                <h2 class="text-2xl font-semibold mt-8 mb-4">Gegevensoverdracht</h2>
+                <p class="mb-4">Uw informatie, inclusief Persoonsgegevens, kan worden overgedragen naar — en onderhouden
+                    op — computers die zich buiten uw staat, provincie, land of andere overheidsrechtelijke jurisdictie
+                    bevinden waar de wetgeving inzake gegevensbescherming kan verschillen van die in uw jurisdictie.</p>
+
+                <h2 class="text-2xl font-semibold mt-8 mb-4">Openbaarmaking van gegevens</h2>
+                <p class="mb-4">BOARD B.V. kan uw Persoonsgegevens openbaar maken in de overtuiging dat dergelijke actie
+                    noodzakelijk is om:</p>
+                <ul class="list-disc pl-6 mb-4">
+                    <li>Te voldoen aan een wettelijke verplichting</li>
+                    <li>De rechten of eigendom van BOARD B.V. te beschermen en te verdedigen</li>
+                    <li>Mogelijke misstanden te voorkomen of te onderzoeken in verband met de Service</li>
+                    <li>De persoonlijke veiligheid van gebruikers van de Service of het publiek te beschermen</li>
+                    <li>Zich te beschermen tegen juridische aansprakelijkheid</li>
+                </ul>
+
+                <h2 class="text-2xl font-semibold mt-8 mb-4">Beveiliging van gegevens</h2>
+                <p class="mb-4">De veiligheid van uw gegevens is belangrijk voor ons, maar onthoud dat geen enkele
+                    methode van verzending via het internet of methode van elektronische opslag 100% veilig is. Hoewel
+                    we streven naar het gebruik van commercieel aanvaardbare middelen om uw Persoonsgegevens te
+                    beschermen, kunnen we de absolute veiligheid ervan niet garanderen.</p>
+
+                <h2 class="text-2xl font-semibold mt-8 mb-4">Wijzigingen in dit privacybeleid</h2>
+                <p class="mb-4">We kunnen ons privacybeleid van tijd tot tijd bijwerken. We zullen u op de hoogte
+                    stellen van eventuele wijzigingen door het nieuwe privacybeleid op deze pagina te plaatsen.</p>
+                <p class="mb-4">We raden u aan dit privacybeleid regelmatig te controleren op eventuele wijzigingen.
+                    Wijzigingen in dit privacybeleid zijn van kracht wanneer ze op deze pagina worden geplaatst.</p>
+
+                <h2 class="text-2xl font-semibold mt-8 mb-4">Contact</h2>
+                <p class="mb-4">Als u vragen heeft over dit privacybeleid, neem dan contact met ons op:</p>
+                <ul class="list-disc pl-6 mb-4">
+                    <li>Via e-mail: privacy@boardapp.nl</li>
+                    <li>Door een brief te sturen naar: BOARD B.V., Datastraat 123, 1234 AB Amsterdam</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-wrap justify-between">
+                <div class="w-full md:w-1/4 mb-6 md:mb-0">
+                    <h3 class="text-lg font-semibold mb-2">Over BOARD</h3>
+                    <p class="text-sm">BOARD is de ultieme oplossing voor gegevensintegratie en -visualisatie, ontworpen
+                        om uw bedrijfsdata tot leven te brengen.</p>
+                </div>
+                <div class="w-full md:w-1/4 mb-6 md:mb-0">
+                    <h3 class="text-lg font-semibold mb-2">Snelle Links</h3>
+                    <ul class="text-sm">
+                        <li><a href="index.html#home" class="hover:text-blue-300">Home</a></li>
+                        <li><a href="index.html#voordelen" class="hover:text-blue-300">Voordelen</a></li>
+                        <li><a href="index.html#pilot" class="hover:text-blue-300">Pilotprogramma</a></li>
+                        <li><a href="dashboards.html" class="hover:text-blue-300">Dashboards</a></li>
+                        <li><a href="index.html#over-ons" class="hover:text-blue-300">Over Ons</a></li>
+                        <li><a href="index.html#contact" class="hover:text-blue-300">Contact</a></li>
+                        <li><a href="privacy-policy.html" class="hover:text-blue-300">Privacybeleid</a></li>
+                    </ul>
+                </div>
+                <div class="w-full md:w-1/4 mb-6 md:mb-0">
+                    <h3 class="text-lg font-semibold mb-2">Contact</h3>
+                    <p class="text-sm">Datastraat 123<br>1234 AB Amsterdam<br>Tel: +31 20 123 4567<br>Email:
+                        info@boardapp.nl</p>
+                </div>
+                <div class="w-full md:w-1/4">
+                    <h3 class="text-lg font-semibold mb-2">Nieuwsbrief</h3>
+                    <form id="newsletterForm" class="flex flex-col sm:flex-row">
+                        <input type="email" placeholder="Uw e-mailadres"
+                            class="mb-2 sm:mb-0 sm:mr-2 px-4 py-2 rounded-md text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            required>
+                        <button type="submit"
+                            class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300">Aanmelden</button>
+                    </form>
+                </div>
+            </div>
+            <div class="mt-8 text-center text-sm">
+                <p>&copy; 2024 BOARD B.V. Alle rechten voorbehouden.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Form submission handling
+        function handleFormSubmit(formId, successMessage) {
+            const form = document.getElementById(formId);
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                // Here you would typically send the form data to a server
+                // For this example, we'll just show a success message
+                alert(successMessage);
+                form.reset();
+            });
+        }
+
+        handleFormSubmit('newsletterForm', 'Bedankt voor uw aanmelding voor onze nieuwsbrief!');
+
+        // Animate elements on scroll
+        function animateOnScroll() {
+            const elements = document.querySelectorAll('.animate-on-scroll');
+            elements.forEach(el => {
+                const rect = el.getBoundingClientRect();
+                const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+                if (rect.top <= windowHeight * 0.75) {
+                    el.classList.add('animate-fade-in');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', animateOnScroll);
+        animateOnScroll(); // Run once on load
+
+        // Add animation classes to elements
+        document.querySelectorAll('main section > *').forEach(el => {
+            el.classList.add('animate-on-scroll', 'opacity-0');
+        });
+    </script>
+</body>
+
+</html>
