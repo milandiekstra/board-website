@@ -1,3 +1,492 @@
 {
-    "dummydata":true
+    "data": [
+      {
+        "datum": "01-08-2024",
+        "omzet": 1250000,
+        "bestellingen": 42000,
+        "gemiddeldeBestelwaarde": 29.76,
+        "bezoekers": 500000,
+        "conversiePercentage": 8.4
+      },
+      {
+        "datum": "02-08-2024",
+        "omzet": 1320000,
+        "bestellingen": 45000,
+        "gemiddeldeBestelwaarde": 29.33,
+        "bezoekers": 520000,
+        "conversiePercentage": 8.65
+      },
+      {
+        "datum": "03-08-2024",
+        "omzet": 1180000,
+        "bestellingen": 40000,
+        "gemiddeldeBestelwaarde": 29.50,
+        "bezoekers": 480000,
+        "conversiePercentage": 8.33
+      },
+      {
+        "datum": "04-08-2024",
+        "omzet": 1400000,
+        "bestellingen": 47000,
+        "gemiddeldeBestelwaarde": 29.79,
+        "bezoekers": 550000,
+        "conversiePercentage": 8.55
+      },
+      {
+        "datum": "05-08-2024",
+        "omzet": 1350000,
+        "bestellingen": 46000,
+        "gemiddeldeBestelwaarde": 29.35,
+        "bezoekers": 530000,
+        "conversiePercentage": 8.68
+      },
+      {
+        "datum": "06-08-2024",
+        "omzet": 1280000,
+        "bestellingen": 43000,
+        "gemiddeldeBestelwaarde": 29.77,
+        "bezoekers": 510000,
+        "conversiePercentage": 8.43
+      },
+      {
+        "datum": "07-08-2024",
+        "omzet": 1360000,
+        "bestellingen": 46500,
+        "gemiddeldeBestelwaarde": 29.25,
+        "bezoekers": 540000,
+        "conversiePercentage": 8.61
+      },
+      {
+        "datum": "08-08-2024",
+        "omzet": 1420000,
+        "bestellingen": 48000,
+        "gemiddeldeBestelwaarde": 29.58,
+        "bezoekers": 560000,
+        "conversiePercentage": 8.57
+      },
+      {
+        "datum": "09-08-2024",
+        "omzet": 1300000,
+        "bestellingen": 44000,
+        "gemiddeldeBestelwaarde": 29.55,
+        "bezoekers": 515000,
+        "conversiePercentage": 8.54
+      },
+      {
+        "datum": "10-08-2024",
+        "omzet": 1220000,
+        "bestellingen": 41500,
+        "gemiddeldeBestelwaarde": 29.40,
+        "bezoekers": 490000,
+        "conversiePercentage": 8.47
+      },
+      {
+        "datum": "11-08-2024",
+        "omzet": 1380000,
+        "bestellingen": 47000,
+        "gemiddeldeBestelwaarde": 29.36,
+        "bezoekers": 545000,
+        "conversiePercentage": 8.62
+      },
+      {
+        "datum": "12-08-2024",
+        "omzet": 1340000,
+        "bestellingen": 45500,
+        "gemiddeldeBestelwaarde": 29.45,
+        "bezoekers": 525000,
+        "conversiePercentage": 8.67
+      },
+      {
+        "datum": "13-08-2024",
+        "omzet": 1290000,
+        "bestellingen": 43500,
+        "gemiddeldeBestelwaarde": 29.66,
+        "bezoekers": 505000,
+        "conversiePercentage": 8.61
+      },
+      {
+        "datum": "14-08-2024",
+        "omzet": 1370000,
+        "bestellingen": 46000,
+        "gemiddeldeBestelwaarde": 29.78,
+        "bezoekers": 535000,
+        "conversiePercentage": 8.60
+      },
+      {
+        "datum": "15-08-2024",
+        "omzet": 1410000,
+        "bestellingen": 47500,
+        "gemiddeldeBestelwaarde": 29.68,
+        "bezoekers": 555000,
+        "conversiePercentage": 8.56
+      },
+      {
+        "datum": "16-08-2024",
+        "omzet": 1330000,
+        "bestellingen": 45000,
+        "gemiddeldeBestelwaarde": 29.56,
+        "bezoekers": 525000,
+        "conversiePercentage": 8.57
+      },
+      {
+        "datum": "17-08-2024",
+        "omzet": 1260000,
+        "bestellingen": 42500,
+        "gemiddeldeBestelwaarde": 29.65,
+        "bezoekers": 495000,
+        "conversiePercentage": 8.59
+      },
+      {
+        "datum": "18-08-2024",
+        "omzet": 1390000,
+        "bestellingen": 47000,
+        "gemiddeldeBestelwaarde": 29.57,
+        "bezoekers": 550000,
+        "conversiePercentage": 8.55
+      },
+      {
+        "datum": "19-08-2024",
+        "omzet": 1350000,
+        "bestellingen": 45500,
+        "gemiddeldeBestelwaarde": 29.67,
+        "bezoekers": 530000,
+        "conversiePercentage": 8.58
+      },
+      {
+        "datum": "20-08-2024",
+        "omzet": 1310000,
+        "bestellingen": 44000,
+        "gemiddeldeBestelwaarde": 29.77,
+        "bezoekers": 515000,
+        "conversiePercentage": 8.54
+      },
+      {
+        "datum": "21-08-2024",
+        "omzet": 1380000,
+        "bestellingen": 46500,
+        "gemiddeldeBestelwaarde": 29.68,
+        "bezoekers": 540000,
+        "conversiePercentage": 8.61
+      },
+      {
+        "datum": "22-08-2024",
+        "omzet": 1420000,
+        "bestellingen": 48000,
+        "gemiddeldeBestelwaarde": 29.58,
+        "bezoekers": 560000,
+        "conversiePercentage": 8.57
+      },
+      {
+        "datum": "23-08-2024",
+        "omzet": 1340000,
+        "bestellingen": 45000,
+        "gemiddeldeBestelwaarde": 29.78,
+        "bezoekers": 525000,
+        "conversiePercentage": 8.57
+      },
+      {
+        "datum": "24-08-2024",
+        "omzet": 1270000,
+        "bestellingen": 43000,
+        "gemiddeldeBestelwaarde": 29.53,
+        "bezoekers": 500000,
+        "conversiePercentage": 8.60
+      },
+      {
+        "datum": "25-08-2024",
+        "omzet": 1400000,
+        "bestellingen": 47500,
+        "gemiddeldeBestelwaarde": 29.47,
+        "bezoekers": 555000,
+        "conversiePercentage": 8.56
+      },
+      {
+        "datum": "26-08-2024",
+        "omzet": 1360000,
+        "bestellingen": 46000,
+        "gemiddeldeBestelwaarde": 29.57,
+        "bezoekers": 535000,
+        "conversiePercentage": 8.60
+      },
+      {
+        "datum": "27-08-2024",
+        "omzet": 1320000,
+        "bestellingen": 44500,
+        "gemiddeldeBestelwaarde": 29.66,
+        "bezoekers": 520000,
+        "conversiePercentage": 8.56
+      },
+      {
+        "datum": "28-08-2024",
+        "omzet": 1390000,
+        "bestellingen": 47000,
+        "gemiddeldeBestelwaarde": 29.57,
+        "bezoekers": 545000,
+        "conversiePercentage": 8.62
+      },
+      {
+        "datum": "29-08-2024",
+        "omzet": 1430000,
+        "bestellingen": 48500,
+        "gemiddeldeBestelwaarde": 29.48,
+        "bezoekers": 565000,
+        "conversiePercentage": 8.58
+      },
+      {
+        "datum": "30-08-2024",
+        "omzet": 1350000,
+        "bestellingen": 45500,
+        "gemiddeldeBestelwaarde": 29.67,
+        "bezoekers": 530000,
+        "conversiePercentage": 8.58
+      },
+      {
+        "datum": "31-08-2024",
+        "omzet": 1280000,
+        "bestellingen": 43500,
+        "gemiddeldeBestelwaarde": 29.43,
+        "bezoekers": 505000,
+        "conversiePercentage": 8.61
+      },
+      {
+        "datum": "01-09-2024",
+        "omzet": 1410000,
+        "bestellingen": 47500,
+        "gemiddeldeBestelwaarde": 29.68,
+        "bezoekers": 555000,
+        "conversiePercentage": 8.56
+      },
+      {
+        "datum": "02-09-2024",
+        "omzet": 1370000,
+        "bestellingen": 46500,
+        "gemiddeldeBestelwaarde": 29.46,
+        "bezoekers": 540000,
+        "conversiePercentage": 8.61
+      },
+      {
+        "datum": "03-09-2024",
+        "omzet": 1330000,
+        "bestellingen": 45000,
+        "gemiddeldeBestelwaarde": 29.56,
+        "bezoekers": 525000,
+        "conversiePercentage": 8.57
+      },
+      {
+        "datum": "04-09-2024",
+        "omzet": 1400000,
+        "bestellingen": 47000,
+        "gemiddeldeBestelwaarde": 29.79,
+        "bezoekers": 550000,
+        "conversiePercentage": 8.55
+      },
+      {
+        "datum": "05-09-2024",
+        "omzet": 1440000,
+        "bestellingen": 48500,
+        "gemiddeldeBestelwaarde": 29.69,
+        "bezoekers": 570000,
+        "conversiePercentage": 8.51
+      },
+      {
+        "datum": "06-09-2024",
+        "omzet": 1360000,
+        "bestellingen": 46000,
+        "gemiddeldeBestelwaarde": 29.57,
+        "bezoekers": 535000,
+        "conversiePercentage": 8.60
+      },
+      {
+        "datum": "07-09-2024",
+        "omzet": 1290000,
+        "bestellingen": 43500,
+        "gemiddeldeBestelwaarde": 29.66,
+        "bezoekers": 510000,
+        "conversiePercentage": 8.53
+      },
+      {
+        "datum": "08-09-2024",
+        "omzet": 1420000,
+        "bestellingen": 48000,
+        "gemiddeldeBestelwaarde": 29.58,
+        "bezoekers": 560000,
+        "conversiePercentage": 8.57
+      },
+      {
+        "datum": "09-09-2024",
+        "omzet": 1380000,
+        "bestellingen": 46500,
+        "gemiddeldeBestelwaarde": 29.68,
+        "bezoekers": 545000,
+        "conversiePercentage": 8.53
+      },
+      {
+        "datum": "10-09-2024",
+        "omzet": 1340000,
+        "bestellingen": 45500,
+        "gemiddeldeBestelwaarde": 29.45,
+        "bezoekers": 530000,
+        "conversiePercentage": 8.58
+      },
+      {
+        "datum": "11-09-2024",
+        "omzet": 1410000,
+        "bestellingen": 47500,
+        "gemiddeldeBestelwaarde": 29.68,
+        "bezoekers": 555000,
+        "conversiePercentage": 8.56
+      },
+      {
+        "datum": "12-09-2024",
+        "omzet": 1450000,
+        "bestellingen": 49000,
+        "gemiddeldeBestelwaarde": 29.59,
+        "bezoekers": 575000,
+        "conversiePercentage": 8.52
+      },
+      {
+        "datum": "13-09-2024",
+        "omzet": 1370000,
+        "bestellingen": 46500,
+        "gemiddeldeBestelwaarde": 29.46,
+        "bezoekers": 540000,
+        "conversiePercentage": 8.61
+      },
+      {
+        "datum": "14-09-2024",
+        "omzet": 1300000,
+        "bestellingen": 44000,
+        "gemiddeldeBestelwaarde": 29.55,
+        "bezoekers": 515000,
+        "conversiePercentage": 8.54
+      },
+      {
+        "datum": "15-09-2024",
+      "omzet": 1430000,
+      "bestellingen": 48500,
+      "gemiddeldeBestelwaarde": 29.48,
+      "bezoekers": 565000,
+      "conversiePercentage": 8.58
+    },
+    {
+      "datum": "16-09-2024",
+      "omzet": 1390000,
+      "bestellingen": 47000,
+      "gemiddeldeBestelwaarde": 29.57,
+      "bezoekers": 550000,
+      "conversiePercentage": 8.55
+    },
+    {
+      "datum": "17-09-2024",
+      "omzet": 1350000,
+      "bestellingen": 45500,
+      "gemiddeldeBestelwaarde": 29.67,
+      "bezoekers": 530000,
+      "conversiePercentage": 8.58
+    },
+    {
+      "datum": "18-09-2024",
+      "omzet": 1420000,
+      "bestellingen": 48000,
+      "gemiddeldeBestelwaarde": 29.58,
+      "bezoekers": 560000,
+      "conversiePercentage": 8.57
+    },
+    {
+      "datum": "19-09-2024",
+      "omzet": 1460000,
+      "bestellingen": 49500,
+      "gemiddeldeBestelwaarde": 29.49,
+      "bezoekers": 580000,
+      "conversiePercentage": 8.53
+    },
+    {
+      "datum": "20-09-2024",
+      "omzet": 1380000,
+      "bestellingen": 46500,
+      "gemiddeldeBestelwaarde": 29.68,
+      "bezoekers": 545000,
+      "conversiePercentage": 8.53
+    },
+    {
+      "datum": "21-09-2024",
+      "omzet": 1310000,
+      "bestellingen": 44500,
+      "gemiddeldeBestelwaarde": 29.44,
+      "bezoekers": 520000,
+      "conversiePercentage": 8.56
+    },
+    {
+      "datum": "22-09-2024",
+      "omzet": 1440000,
+      "bestellingen": 48500,
+      "gemiddeldeBestelwaarde": 29.69,
+      "bezoekers": 570000,
+      "conversiePercentage": 8.51
+    },
+    {
+      "datum": "23-09-2024",
+      "omzet": 1400000,
+      "bestellingen": 47500,
+      "gemiddeldeBestelwaarde": 29.47,
+      "bezoekers": 555000,
+      "conversiePercentage": 8.56
+    },
+    {
+      "datum": "24-09-2024",
+      "omzet": 1360000,
+      "bestellingen": 46000,
+      "gemiddeldeBestelwaarde": 29.57,
+      "bezoekers": 535000,
+      "conversiePercentage": 8.60
+    },
+    {
+      "datum": "25-09-2024",
+      "omzet": 1430000,
+      "bestellingen": 48500,
+      "gemiddeldeBestelwaarde": 29.48,
+      "bezoekers": 565000,
+      "conversiePercentage": 8.58
+    },
+    {
+      "datum": "26-09-2024",
+      "omzet": 1470000,
+      "bestellingen": 50000,
+      "gemiddeldeBestelwaarde": 29.40,
+      "bezoekers": 585000,
+      "conversiePercentage": 8.55
+    },
+    {
+      "datum": "27-09-2024",
+      "omzet": 1390000,
+      "bestellingen": 47000,
+      "gemiddeldeBestelwaarde": 29.57,
+      "bezoekers": 550000,
+      "conversiePercentage": 8.55
+    },
+    {
+      "datum": "28-09-2024",
+      "omzet": 1320000,
+      "bestellingen": 45000,
+      "gemiddeldeBestelwaarde": 29.33,
+      "bezoekers": 525000,
+      "conversiePercentage": 8.57
+    },
+    {
+      "datum": "29-09-2024",
+      "omzet": 1450000,
+      "bestellingen": 49000,
+      "gemiddeldeBestelwaarde": 29.59,
+      "bezoekers": 575000,
+      "conversiePercentage": 8.52
+    },
+    {
+      "datum": "30-09-2024",
+      "omzet": 1410000,
+      "bestellingen": 47500,
+      "gemiddeldeBestelwaarde": 29.68,
+      "bezoekers": 555000,
+      "conversiePercentage": 8.56
+    }
+  ]
 }
