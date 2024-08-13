@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Analytics Dashboard</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- React, ReactDOM, en PropTypes -->
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/prop-types@15.7.2/prop-types.min.js"></script>
+    
+    <!-- Recharts bibliotheek -->
+    <script src="https://unpkg.com/recharts@2.1.9/umd/Recharts.js"></script>
+
+    <!-- Babel standalone voor JSX transformatie -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        @media (max-width: 640px) {
+            .recharts-wrapper {
+                font-size: 12px;
+            }
+        }
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        .typing-indicator::after {
+            content: '|';
+            animation: blink 1s infinite;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <nav class="bg-blue-600 text-white p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center">
+                <span class="font-bold text-xl">BOARD</span>
+            </div>
+            <div class="hidden md:flex items-center space-x-4">
+                <a href="#home" class="hover:text-blue-200">Home</a>
+                <a href="#voordelen" class="hover:text-blue-200">Voordelen</a>
+                <a href="#pilot" class="hover:text-blue-200">Pilotprogramma</a>
+                <a href="dashboards.html" class="hover:text-blue-200">Dashboards</a>
+                <a href="#over-ons" class="hover:text-blue-200">Over Ons</a>
+                <a href="#contact" class="hover:text-blue-200">Contact</a>
+            </div>
+            <a href="#pilot" class="bg-white text-blue-600 px-4 py-2 rounded-md hover:bg-blue-100 transition duration-300">Doe mee aan de pilot</a>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-8 relative">
+        <img src="/images/systemen/logo20.png" alt="Google Analytics Logo" class="absolute top-0 right-0 h-16 w-auto mt-4 mr-4">
+        <div id="google-analytics-dashboard"></div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>&copy; 2024 BOARD B.V. Alle rechten voorbehouden.</p>
+        </div>
+    </footer>
+
+    <script type="text/babel">
+        // Definieer de UI componenten
+        const Card = ({ children }) => <div className="p-4 bg-white shadow rounded">{children}</div>;
+        const CardHeader = ({ children }) => <div className="mb-2 border-b pb-2">{children}</div>;
+        const CardContent = ({ children }) => <div className="text-gray-700">{children}</div>;
+        const CardTitle = ({ children }) => <h2 className="text-xl font-semibold">{children}</h2>;
+        
+        const Select = ({ children, onValueChange }) => (
+            <select 
+                onChange={(e) => onValueChange(e.target.value)} 
+                className="p-2 border rounded w-full mb-4"
+            >
+                {children}
+            </select>
+        );
+            
+        const SelectTrigger = ({ children }) => <>{children}</>;
+        const SelectValue = ({ children }) => <>{children}</>;
+        const SelectContent = ({ children }) => <>{children}</>;
+        const SelectItem = ({ value, children }) => <option value={value}>{children}</option>;
+
+        // Data voor het dashboard
+        const data = [
+          { datum: '01-02-2024', paginasPerSessie: 4.25, sessieDuur: 250, bouncePercentage: 42.08, nieuweGebruikers: 440, terugkerendeGebruikers: 312, totaalAantalSessies: 702, totaalAantalPaginaweergaven: 3312, conversieRatio: 2.63, gemiddeldeTijdOpPagina: 111 },
+          { datum: '02-02-2024', paginasPerSessie: 5.4, sessieDuur: 334, bouncePercentage: 45.68, nieuweGebruikers: 427, terugkerendeGebruikers: 345, totaalAantalSessies: 802, totaalAantalPaginaweergaven: 3201, conversieRatio: 2.63, gemiddeldeTijdOpPagina: 168 },
+          { datum: '03-02-2024', paginasPerSessie: 4.96, sessieDuur: 220, bouncePercentage: 40.31, nieuweGebruikers: 534, terugkerendeGebruikers: 301, totaalAantalSessies: 897, totaalAantalPaginaweergaven: 3841, conversieRatio: 2.54, gemiddeldeTijdOpPagina: 136 },
+          { datum: '04-02-2024', paginasPerSessie: 4.7, sessieDuur: 272, bouncePercentage: 48.42, nieuweGebruikers: 471, terugkerendeGebruikers: 345, totaalAantalSessies: 899, totaalAantalPaginaweergaven: 3419, conversieRatio: 2.09, gemiddeldeTijdOpPagina: 131 },
+          { datum: '05-02-2024', paginasPerSessie: 3.81, sessieDuur: 366, bouncePercentage: 44.5, nieuweGebruikers: 411, terugkerendeGebruikers: 381, totaalAantalSessies: 854, totaalAantalPaginaweergaven: 3765, conversieRatio: 2.84, gemiddeldeTijdOpPagina: 108 },
+        ];
+
+        const GoogleAnalyticsDashboard = () => {
+          console.log('GoogleAnalyticsDashboard is being rendered');
+          const [selectedMetric, setSelectedMetric] = React.useState('totaalAantalSessies');
+
+          const metrics = [
+            { value: 'totaalAantalSessies', label: 'Totaal aantal sessies' },
+            { value: 'totaalAantalPaginaweergaven', label: 'Totaal aantal paginaweergaven' },
+            { value: 'nieuweGebruikers', label: 'Nieuwe gebruikers' },
+            { value: 'terugkerendeGebruikers', label: 'Terugkerende gebruikers' },
+            { value: 'paginasPerSessie', label: "Pagina's per sessie" },
+            { value: 'sessieDuur', label: 'Sessieduur (sec)' },
+            { value: 'bouncePercentage', label: 'Bounce percentage (%)' },
+            { value: 'conversieRatio', label: 'Conversie ratio (%)' },
+            { value: 'gemiddeldeTijdOpPagina', label: 'Gemiddelde tijd op pagina (sec)' },
+          ];
+
+          const COLORS = ['#4285F4', '#34A853', '#FBBC05', '#EA4335', '#5F6368'];
+
+          const formatNumber = (num) => {
+            return new Intl.NumberFormat('nl-NL', { maximumFractionDigits: 2 }).format(num);
+          };
+
+          const calculateTotals = () => {
+            return data.reduce((acc, curr) => {
+              acc.totaalSessies += curr.totaalAantalSessies;
+              acc.totaalPaginaweergaven += curr.totaalAantalPaginaweergaven;
+              acc.totaalNieuweGebruikers += curr.nieuweGebruikers;
+              acc.totaalTerugkerendeGebruikers += curr.terugkerendeGebruikers;
+              return acc;
+            }, { totaalSessies: 0, totaalPaginaweergaven: 0, totaalNieuweGebruikers: 0, totaalTerugkerendeGebruikers: 0 });
+          };
+
+          const totals = calculateTotals();
+
+          return (
+            <div className="space-y-8 max-w-4xl mx-auto">
+              <h2 className="text-3xl font-bold mb-6 text-blue-600">Google Analytics Dashboard</h2>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Totaal Aantal Sessies</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-2xl font-semibold text-blue-600">{formatNumber(totals.totaalSessies)}</p>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Totaal Paginaweergaven</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-2xl font-semibold text-blue-600">{formatNumber(totals.totaalPaginaweergaven)}</p>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Gemiddelde Conversie Ratio</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-2xl font-semibold text-blue-600">{formatNumber(data.reduce((acc, curr) => acc + curr.conversieRatio, 0) / data.length)}%</p>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Gem. Tijd op Pagina</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-2xl font-semibold text-blue-600">{formatNumber(data.reduce((acc, curr) => acc + curr.gemiddeldeTijdOpPagina, 0) / data.length)} sec</p>
+                  </CardContent>
+                </Card>
+              </div>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Metriek over tijd</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <Select onValueChange={setSelectedMetric} defaultValue={selectedMetric}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecteer metriek" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {metrics.map((metric) => (
+                        <SelectItem key={metric.value} value={metric.value}>
+                          {metric.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <Recharts.ResponsiveContainer width="100%" height={300}>
+                    <Recharts.LineChart data={data}>
+                      <Recharts.CartesianGrid strokeDasharray="3 3" />
+                      <Recharts.XAxis dataKey="datum" />
+                      <Recharts.YAxis />
+                      <Recharts.Tooltip />
+                      <Recharts.Legend />
+                      <Recharts.Line type="monotone" dataKey={selectedMetric} stroke="#4285F4" name={metrics.find(m => m.value === selectedMetric).label} />
+                    </Recharts.LineChart>
+                  </Recharts.ResponsiveContainer>
+                </CardContent>
+              </Card>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Gebruikers Verdeling</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <Recharts.ResponsiveContainer width="100%" height={300}>
+                      <Recharts.PieChart>
+                        <Recharts.Pie
+                          data={[
+                            { name: 'Nieuwe Gebruikers', value: totals.totaalNieuweGebruikers },
+                            { name: 'Terugkerende Gebruikers', value: totals.totaalTerugkerendeGebruikers }
+                          ]}
+                          cx="50%"
+                          cy="50%"
+                          labelLine={false}
+                          outerRadius={80}
+                          fill="#4285F4"
+                          dataKey="value"
+                          label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                        >
+                          {data.map((entry, index) => (
+                            <Recharts.Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                          ))}
+                        </Recharts.Pie>
+                        <Recharts.Tooltip />
+                      </Recharts.PieChart>
+                    </Recharts.ResponsiveContainer>
+                  </CardContent>
+                </Card>
+
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Bounce Percentage vs Conversie Ratio</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <Recharts.ResponsiveContainer width="100%" height={300}>
+                      <Recharts.BarChart data={data}>
+                        <Recharts.CartesianGrid strokeDasharray="3 3" />
+                        <Recharts.XAxis dataKey="datum" />
+                        <Recharts.YAxis yAxisId="left" orientation="left" stroke="#4285F4" />
+                        <Recharts.YAxis yAxisId="right" orientation="right" stroke="#34A853" />
+                        <Recharts.Tooltip />
+                        <Recharts.Legend />
+                        <Recharts.Bar yAxisId="left" dataKey="bouncePercentage" fill="#4285F4" name="Bounce Percentage" />
+                        <Recharts.Bar yAxisId="right" dataKey="conversieRatio" fill="#34A853" name="Conversie Ratio" />
+                      </Recharts.BarChart>
+                    </Recharts.ResponsiveContainer>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          );
+        };
+
+        const ChatbotInterface = () => {
+            const [messages, setMessages] = React.useState([]);
+            const [currentMessage, setCurrentMessage] = React.useState('');
+            const [isTyping, setIsTyping] = React.useState(false);
+            const [isChatEnded, setIsChatEnded] = React.useState(false);
+            const [showCTA, setShowCTA] = React.useState(false);
+
+            const conversation = [
+                { question: "Wat is de Customer Lifetime Value (CLV)?", answer: "De gemiddelde Customer Lifetime Value voor deze periode is €250. Dit is berekend op basis van gemiddelde bestelwaarde, aankoopfrequentie en klantenretentie." },
+                { question: "Hoe presteert onze website qua laadsnelheid?", answer: "De gemiddelde laadtijd van de website is 2.8 seconden. Dit is een verbetering van 15% ten opzichte van vorige maand, wat bijdraagt aan een betere gebruikerservaring en potentieel hogere conversieratio's." },
+                { question: "Wat is onze Return on Ad Spend (ROAS)?", answer: "De huidige Return on Ad Spend is 3.5, wat betekent dat voor elke euro die we aan advertenties besteden, we €3.50 aan omzet genereren. Dit duidt op een effectieve advertentiestrategie." }
+            ];
+
+            const simulateTyping = (text, delay = 100) => {
+                return new Promise((resolve) => {
+                    let i = 0;
+                    setIsTyping(true);
+                    const intervalId = setInterval(() => {
+                        setCurrentMessage((prev) => prev + text[i]);
+                        i++;
+                        if (i === text.length) {
+                            clearInterval(intervalId);
+                            setIsTyping(false);
+                            resolve();
+                        }
+                    }, delay);
+                });
+            };
+
+            const runConversation = async () => {
+                for (let i = 0; i < conversation.length; i++) {
+                    const { question, answer } = conversation[i];
+                    await simulateTyping(question);
+                    setMessages((prev) => [...prev, { text: question, isUser: true }]);
+                    setCurrentMessage('');
+                    await new Promise((resolve) => setTimeout(resolve, 500));
+                    setMessages((prev) => [...prev, { text: answer, isUser: false }]);
+                    if (i < conversation.length - 1) {
+                        await new Promise((resolve) => setTimeout(resolve, 1000));
+                    }
+                }
+                setIsChatEnded(true);
+                await new Promise((resolve) => setTimeout(resolve, 2000)); // 2 seconden wachten
+                setShowCTA(true);
+            };
+
+            React.useEffect(() => {
+                runConversation();
+            }, []);
+
+            return (
+                <div className={`bg-white rounded-lg shadow-md p-4 max-w-2xl mx-auto mt-8 relative transition-all duration-500 ${isChatEnded ? 'opacity-50' : ''}`}>
+                    <h3 className="text-xl font-bold mb-4 text-blue-600">Chat met BOARD AI</h3>
+                    <div className="space-y-4 mb-4">
+                        {messages.map((message, index) => (
+                            <div key={index} className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}>
+                                <div className={`max-w-3/4 p-2 rounded-lg ${
+                                    message.isUser 
+                                        ? 'bg-blue-500 text-white' 
+                                        : 'bg-gray-200 text-black'
+                                }`}>
+                                    {message.text}
+                                </div>
+                            </div>
+                        ))}
+                        {isTyping && (
+                            <div className="flex justify-end">
+                                <div className="max-w-3/4 p-2 rounded-lg bg-blue-500 text-white typing-indicator">
+                                    {currentMessage}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                    {showCTA && (
+                        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 transition-opacity duration-500">
+                            <button className="bg-blue-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg hover:bg-blue-700 transform hover:scale-105 transition duration-300">
+                                Ook chatten met je Google Analytics data? Meld je aan voor het pilotprogramma!
+                            </button>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        const CombinedDashboard = () => {
+    return (
+        <React.Fragment>
+            <GoogleAnalyticsDashboard />
+            
+            <div className="my-12 text-center">
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-blue-600 mb-4">
+                    Krijg nieuwe inzichten!
+                </h2>
+                <h3 className="text-xl md:text-2xl lg:text-3xl font-semibold text-gray-700">
+                    met BOARD AI
+                </h3>
+            </div>
+            
+            <ChatbotInterface />
+        </React.Fragment>
+    );
+};
+
+ReactDOM.render(
+    <React.StrictMode>
+        <CombinedDashboard />
+    </React.StrictMode>,
+    document.getElementById('google-analytics-dashboard')
+);
+    </script>
+</body>
+</html>

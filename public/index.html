@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOARD - Breng je data tot leven</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- GSAP en plugins -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollToPlugin.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/MotionPathPlugin.min.js"></script>
+
+    <!-- React en ReactDOM -->
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+
+    <!-- Recharts bibliotheek -->
+    <script src="https://unpkg.com/recharts/umd/Recharts.js"></script>
+
+    <style>
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0px); }
+        }
+        .float { animation: float 6s ease-in-out infinite; }
+        .animate-fade-in {
+            opacity: 1 !important;
+            transition: opacity 0.5s ease-in-out;
+        }
+        .shadow-text {
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        .logo-placeholder {
+            width: 75px;
+            height: 75px;
+            background-color: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 12px;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header class="bg-white shadow-md fixed w-full z-10">
+        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <div class="flex items-center">
+                <span class="text-2xl font-bold text-black">BOARD</span>
+            </div>
+            <div class="hidden md:flex items-center space-x-4">
+                <a href="#home" class="text-gray-800 hover:text-blue-600">Home</a>
+                <a href="#voordelen" class="text-gray-800 hover:text-blue-600">Voordelen</a>
+                <a href="#pilot" class="text-gray-800 hover:text-blue-600">Pilotprogramma</a>
+                <a href="dashboards.html" class="text-gray-800 hover:text-blue-600">Dashboards</a>
+                <a href="#over-ons" class="text-gray-800 hover:text-blue-600">Over Ons</a>
+                <a href="#contact" class="text-gray-800 hover:text-blue-600">Contact</a>
+            </div>
+            <a href="#pilot" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300">Doe mee aan de pilot</a>
+        </nav>
+    </header>
+
+    <main>
+        <section id="home" class="relative h-screen flex items-center overflow-hidden bg-gray-900">
+            <canvas id="logoCanvas" class="absolute inset-0 w-full h-full"></canvas>
+            
+            <div id="fallbackLogos" class="absolute inset-0 w-full h-full flex flex-wrap justify-center items-center" style="display: none;">
+                <!-- Fallback logo placeholders zullen hier dynamisch worden toegevoegd -->
+            </div>
+            
+            <div id="content" class="relative container mx-auto px-6 text-center z-10">
+                <h1 class="text-4xl md:text-6xl font-bold mb-4 text-white shadow-text">Breng je data tot leven met BOARD</h1>
+                <p class="text-xl md:text-2xl mb-8 text-white shadow-text">De oplossing voor gegevensintegratie en -visualisatie</p>
+                <a href="#pilot" id="cta-button" class="bg-blue-600 text-white px-6 py-3 rounded-md text-lg hover:bg-blue-700 transition duration-300">Start nu met de pilot</a>
+            </div>
+        </section>
+
+        <section id="voordelen" class="py-24 bg-gradient-to-r from-blue-600 to-indigo-800">
+            <div class="container mx-auto px-4">
+                <h2 class="text-5xl font-extrabold text-center mb-16 text-white leading-tight">Waarom kiezen voor <span class="text-yellow-300">BOARD</span>?</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="bg-white p-8 rounded-lg shadow-lg transform transition duration-300 hover:scale-105 hover:shadow-xl">
+                        <div class="flex items-center mb-6">
+                            <svg class="w-12 h-12 text-blue-600 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                            </svg>
+                            <h3 class="text-2xl font-bold text-gray-800">Data Centralisatie</h3>
+                        </div>
+                        <p class="text-xl text-gray-600">Alle bedrijfsgegevens op één plek. Eenvoudig toegankelijk en analyseerbaar.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-lg shadow-lg transform transition duration-300 hover:scale-105 hover:shadow-xl">
+                        <div class="flex items-center mb-6">
+                            <svg class="w-12 h-12 text-blue-600 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
+                            </svg>
+                            <h3 class="text-2xl font-bold text-gray-800">Chatten met je Data</h3>
+                        </div>
+                        <p class="text-xl text-gray-600">Stel vragen aan je data via ChatGPT. Krijg direct nieuwe inzichten.</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-lg shadow-lg transform transition duration-300 hover:scale-105 hover:shadow-xl">
+                        <div class="flex items-center mb-6">
+                            <svg class="w-12 h-12 text-blue-600 mr-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                            </svg>
+                            <h3 class="text-2xl font-bold text-gray-800">OAuth 2.0 Compliant</h3>
+                        </div>
+                        <p class="text-xl text-gray-600">Veilige dataopslag en -toegang. Volledig conform de OAuth 2.0 standaard.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="data-flow" class="bg-gray-100 py-24">
+            <div class="container mx-auto px-4">
+                <svg viewBox="0 0 1000 800" class="w-full h-auto">
+                    <defs>
+                        <pattern id="user-image" patternUnits="userSpaceOnUse" width="60" height="60">
+                            <image href="/api/placeholder/60/60" width="60" height="60" />
+                        </pattern>
+                    </defs>
+                    
+                    <!-- Systeem logo's -->
+                    <image href="./images/systemen/logo1.png" x="50" y="50" width="120" height="100" />
+                    <image href="./images/systemen/logo2.png" x="200" y="30" width="100" height="100" />
+                    <image href="./images/systemen/logo3.png" x="350" y="60" width="90" height="90" />
+                    <image href="./images/systemen/logo4.png" x="500" y="40" width="110" height="110" />
+                    <image href="./images/systemen/logo5.png" x="650" y="70" width="80" height="80" />
+                    <image href="./images/systemen/logo6.png" x="800" y="50" width="100" height="100" />
+                    <image href="./images/systemen/logo7.png" x="250" y="200" width="95" height="95" />
+                    <image href="./images/systemen/logo8.png" x="600" y="180" width="105" height="105" />
+                    
+                    <!-- BOARD tekst -->
+                    <text x="500" y="450" text-anchor="middle" font-size="60" font-weight="bold" fill="#1E40AF">BOARD</text>
+                    
+                    <!-- Chat icoon en gebruiker -->
+                    <circle cx="500" cy="650" r="30" fill="#10B981" />
+                    <path d="M485 645 h30 M485 655 h30 M485 665 h20" stroke="white" stroke-width="2" />
+                    <circle cx="500" cy="730" r="30" fill="url(#user-image)" />
+                    
+                    <!-- Datastroomlijnen en bolletjes -->
+                    <g id="dataStreams"></g>
+                    <g id="dataDots"></g>
+                </svg>
+                
+                <div id="chatQuestion" class="text-center mt-8 text-xl font-semibold">
+                    "Wat is de totale omzet van vorige maand?"
+                </div>
+            </div>
+        </section>
+
+        <section id="pilot" class="bg-blue-100 py-16">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl font-bold text-center mb-12">Schrijf je in voor het Pilotprogramma</h2>
+                <div class="max-w-3xl mx-auto bg-white rounded-lg shadow-md p-8">
+                    <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSdotYqxxFxaA62JosBOeSyVzi8pCiLru76v83MTeUPQU9MGyw/viewform?embedded=true" 
+                            width="100%" 
+                            height="1298" 
+                            frameborder="0" 
+                            marginheight="0" 
+                            marginwidth="0"
+                            class="w-full">
+                        Laden...
+                    </iframe>
+                </div>
+            </div>
+        </section>
+
+        <section id="dashboards" class="py-16">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl font-bold text-center mb-12">Dashboard Collectie</h2>
+                <div id="dashboard-collectie"></div>
+            </div>
+        </section>
+
+        <section id="functionaliteiten" class="py-16">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl font-bold text-center mb-12">BOARD Functionaliteiten</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition duration-300">
+                        <h3 class="text-xl font-semibold mb-4">Integratie met meerdere systemen</h3>
+                        <p>Verbind al uw databronnen moeiteloos in één centrale hub.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition duration-300">
+                        <h3 class="text-xl font-semibold mb-4">Geavanceerde visualisatietools</h3>
+                        <p>Creëer boeiende grafieken en diagrammen om uw data tot leven te brengen.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition duration-300">
+                        <h3 class="text-xl font-semibold mb-4">Maatwerk en flexibiliteit</h3>
+                        <p>Pas BOARD aan uw specifieke bedrijfsbehoeften aan voor optimale resultaten.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="over-ons" class="py-20 bg-gradient-to-br from-gray-900 via-gray-800 to-black text-white">
+            <div class="container mx-auto px-6">
+                <h2 class="text-4xl font-bold text-center mb-16">De mannen achter de BOARD</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                    <div class="bg-gradient-to-br from-gray-800 to-gray-900 p-8 rounded-lg shadow-xl hover:shadow-2xl transition duration-300 transform hover:-translate-y-2">
+                        <img src="/images/team/milan-diekstra.png" alt="Milan Diekstra" class="w-40 h-40 rounded-full mx-auto mb-6 object-cover border-4 border-white shadow-lg">
+                        <h3 class="text-2xl font-semibold text-center mb-2 text-blue-300">Milan Diekstra</h3>
+                        <p class="text-center mb-4 text-gray-300 font-bold">Mede-oprichter</p>
+                        <p class="text-gray-300 leading-relaxed">
+                            Milan is de creatieve kracht achter BOARD's missie om data te transformeren van statische informatie naar dynamische, interactieve ervaringen. Zijn visie daagt bedrijven uit om hun gegevens op een volledig nieuwe manier te beleven en te begrijpen.
+                        </p>
+                        <p class="mt-4 text-gray-300 leading-relaxed italic">
+                            "Data vertelt het verhaal van je bedrijf. Wij geven het de stem en het podium dat het verdient."
+                        </p>
+                    </div>
+                    <div class="bg-gradient-to-br from-gray-800 to-gray-900 p-8 rounded-lg shadow-xl hover:shadow-2xl transition duration-300 transform hover:-translate-y-2">
+                        <img src="/images/team/wijnand-karsen.png" alt="Wijnand Karsens" class="w-40 h-40 rounded-full mx-auto mb-6 object-cover border-4 border-white shadow-lg">
+                        <h3 class="text-2xl font-semibold text-center mb-2 text-blue-300">Wijnand Karsens</h3>
+                        <p class="text-center mb-4 text-gray-300 font-bold">Tech Wizard & Mede-oprichter</p>
+                        <p class="text-gray-300 leading-relaxed">
+                            Als het technische brein achter BOARD, zorgt Wijnand ervoor dat onze innovatieve ideeën worden omgezet in krachtige, gebruiksvriendelijke tools. Zijn expertise in ontwikkeling maakt complexe data-integratie toegankelijk en effectief voor elke organisatie.
+                        </p>
+                        <p class="mt-4 text-gray-300 leading-relaxed italic">
+                            "We bouwen bruggen tussen data en besluitvorming, zodat elk inzicht direct kan worden omgezet in actie."
+                        </p>
+                    </div>
+                </div>
+                <div class="mt-16 bg-gradient-to-br from-gray-800 to-gray-900 p-10 rounded-lg shadow-xl">
+                    <h3 class="text-3xl font-bold mb-6 text-center text-blue-300">Onze Visie</h3>
+                    <p class="text-gray-300 mb-4 leading-relaxed">
+                        Bij BOARD zien we een toekomst waarin data niet langer een statisch gegeven is, maar een levend, ademend onderdeel van je bedrijf. We transformeren de manier waarop organisaties hun informatie ervaren en benutten, door geavanceerde technologie te combineren met intuïtieve gebruikerservaringen.
+                    </p>
+                    <p class="text-gray-300 mb-4 leading-relaxed">
+                        Onze aanpak is zowel speels als professioneel. We creëren dashboards die zo boeiend zijn dat ze uitnodigen tot exploratie, en tegelijkertijd zo krachtig dat ze directe zakelijke impact hebben. Met BOARD wordt elke data-interactie een kans om nieuwe inzichten te ontdekken en betere beslissingen te nemen.
+                    </p>
+                    <p class="text-gray-300 leading-relaxed">
+                        We nodigen je uit om deel uit te maken van deze data-revolutie - waar informatie niet alleen wordt geanalyseerd, maar echt tot leven komt. Samen kunnen we de grenzen verleggen van wat mogelijk is met bedrijfsdata, en een nieuwe standaard zetten voor hoe organisaties hun meest waardevolle asset benutten.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="getuigenissen" class="bg-gray-100 py-16">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl font-bold text-center mb-12">Wat onze klanten zouden moeten zeggen</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition duration-300">
+                        <img src="/images/klanten/klant2.png" alt="Klant Avatar" class="w-16 h-16 rounded-full mb-4 mx-auto">
+                        <p class="italic mb-4 text-center">"BOARD heeft onze data-analyse naar een hoger niveau getild. We kunnen nu sneller en beter geïnformeerde beslissingen nemen."</p>
+                        <p class="font-semibold text-center">- Anna de Vries, CEO TechCorp</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition duration-300">
+                        <img src="/images/klanten/klant1.png" alt="Klant Avatar" class="w-16 h-16 rounded-full mb-4 mx-auto">
+                        <p class="italic mb-4 text-center">"De integratiemogelijkheden van BOARD zijn ongeëvenaard. Het heeft onze werkprocessen gestroomlijnd en efficiënter gemaakt."</p>
+                        <p class="font-semibold text-center">- Mark Jansen, CTO DataDrive</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="py-16">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl font-bold text-center mb-12">Voor vragen</h2>
+                <div class="max-w-md mx-auto">
+                    <form id="contactForm">
+                        <div class="mb-4">
+                            <label for="contact-name" class="block text-gray-700 mb-2">Naam</label>
+                            <input type="text" id="contact-name" name="contact-name" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="contact-email" class="block text-gray-700 mb-2">E-mail</label>
+                            <input type="email" id="contact-email" name="contact-email" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="message" class="block text-gray-700 mb-2">Bericht</label>
+                            <textarea id="message" name="message" rows="4" class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-300">Verstuur</button>
+                    </form>
+                </div>
+                <div class="mt-8 text-center">
+                    <p class="mb-2">BOARD B.V.</p>
+                    <p class="mb-2">Datastraat 123, 1234 AB Groningen</p>
+                    <p class="mb-4">Tel: +31 20 123 4567</p>
+                    <div class="flex justify-center space-x-4">
+                        <a href="#" class="text-blue-600 hover:text-blue-800 transition duration-300">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/></svg>
+                        </a>
+                        <a href="#" class="text-blue-400 hover:text-blue-600 transition duration-300">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"/></svg>
+                        </a>
+                        <a href="#" class="text-blue-700 hover:text-blue-900 transition duration-300">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-6">
+            <div class="flex flex-wrap justify-between">
+                <div class="w-full md:w-1/4 mb-6 md:mb-0">
+                    <h3 class="text-lg font-semibold mb-2">Over BOARD</h3>
+                    <p class="text-sm">BOARD is de ultieme oplossing voor gegevensintegratie en -visualisatie, ontworpen om uw bedrijfsdata tot leven te brengen.</p>
+                </div>
+                <div class="w-full md:w-1/4 mb-6 md:mb-0">
+                    <h3 class="text-lg font-semibold mb-2">Snelle Links</h3>
+                    <ul class="text-sm">
+                        <li><a href="#home" class="hover:text-blue-300">Home</a></li>
+                        <li><a href="#voordelen" class="hover:text-blue-300">Voordelen</a></li>
+                        <li><a href="#pilot" class="hover:text-blue-300">Pilotprogramma</a></li>
+                        <li><a href="dashboards.html" class="hover:text-blue-300">Dashboards</a></li>
+                        <li><a href="#over-ons" class="hover:text-blue-300">Over Ons</a></li>
+                        <li><a href="#contact" class="hover:text-blue-300">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="w-full md:w-1/4 mb-6 md:mb-0">
+                    <h3 class="text-lg font-semibold mb-2">Contact</h3>
+                    <p class="text-sm">Datastraat 123<br>1234 AB Amsterdam<br>Tel: +31 20 123 4567<br>Email: info@boardapp.nl</p>
+                </div>
+                <div class="w-full md:w-1/4">
+                    <h3 class="text-lg font-semibold mb-2">Nieuwsbrief</h3>
+                    <form id="newsletterForm" class="flex flex-col sm:flex-row">
+                        <input type="email" placeholder="Uw e-mailadres" class="mb-2 sm:mb-0 sm:mr-2 px-4 py-2 rounded-md text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-300">Aanmelden</button>
+                    </form>
+                </div>
+            </div>
+            <div class="mt-8 text-center text-sm">
+                <p>&copy; 2024 BOARD B.V. Alle rechten voorbehouden.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    // Lijst van beschikbare logo's
+    const logos = [
+        'logo1.png', 'logo2.png', 'logo3.png', 'logo4.png', 'logo5.png',
+        'logo6.png', 'logo7.png', 'logo8.png', 'logo9.png', 'logo10.png',
+        'logo11.png', 'logo12.png', 'logo13.png', 'logo14.png', 'logo15.png',
+        'logo16.png', 'logo17.png', 'logo18.png', 'logo19.png', 'logo20.png', 'logo21.png'
+    ];
+
+    // Selecteer willekeurig 20 logo's
+    function getRandomLogos() {
+        return logos.sort(() => 0.5 - Math.random()).slice(0, 20);
+    }
+
+    const canvas = document.getElementById('logoCanvas');
+    const ctx = canvas.getContext('2d');
+    const fallbackLogos = document.getElementById('fallbackLogos');
+
+    // Zet canvas grootte
+    function setCanvasSize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+
+    setCanvasSize();
+    window.addEventListener('resize', setCanvasSize);
+
+    class Logo {
+        constructor(imageSrc, index) {
+            this.image = new Image();
+            this.image.src = `/images/systemen/${imageSrc}`;
+            this.size = 45 + Math.random() * 30; // Random size between 45 and 75
+            this.x = Math.random() * (canvas.width - this.size);
+            this.y = Math.random() * (canvas.height - this.size);
+            this.speedX = (Math.random() - 0.5) * 2; // Increased speed range
+            this.speedY = (Math.random() - 0.5) * 2; // Increased speed range
+            this.index = index;
+
+            // Voeg fallback placeholder toe
+            const placeholder = document.createElement('div');
+            placeholder.className = 'logo-placeholder';
+            placeholder.textContent = `Logo ${index + 1}`;
+            fallbackLogos.appendChild(placeholder);
+        }
+
+        update() {
+            this.x += this.speedX;
+            this.y += this.speedY;
+
+            // Bounce off edges
+            if (this.x < 0 || this.x > canvas.width - this.size) {
+                this.speedX *= -1;
+                this.x = Math.max(0, Math.min(this.x, canvas.width - this.size));
+            }
+            if (this.y < 0 || this.y > canvas.height - this.size) {
+                this.speedY *= -1;
+                this.y = Math.max(0, Math.min(this.y, canvas.height - this.size));
+            }
+        }
+
+        draw() {
+            if (this.image.complete && this.image.naturalHeight !== 0) {
+                ctx.drawImage(this.image, this.x, this.y, this.size, this.size);
+            } else {
+                // Teken een placeholder cirkel als de afbeelding niet geladen is
+                ctx.beginPath();
+                ctx.arc(this.x + this.size/2, this.y + this.size/2, this.size/2, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(255,255,255,0.1)';
+                ctx.fill();
+                ctx.strokeStyle = 'rgba(255,255,255,0.3)';
+                ctx.stroke();
+                ctx.fillStyle = 'white';
+                ctx.font = '12px Arial';
+                ctx.fillText(`Logo ${this.index + 1}`, this.x + this.size/4, this.y + this.size/2);
+            }
+        }
+    }
+
+    const selectedLogos = getRandomLogos();
+    const logoObjects = selectedLogos.map((logo, index) => new Logo(logo, index));
+
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        logoObjects.forEach(logo => {
+            logo.update();
+            logo.draw();
+        });
+        requestAnimationFrame(animate);
+    }
+
+    // Start de animatie wanneer alle afbeeldingen zijn geladen of na een timeout
+    Promise.all(logoObjects.map(logo => new Promise(resolve => {
+        logo.image.onload = resolve;
+        logo.image.onerror = resolve; // Behandel ook laadfouten
+    }))).then(() => {
+        animate();
+        fallbackLogos.style.display = 'none';
+    }).catch(error => {
+        console.error('Er was een probleem bij het laden van de logo\'s:', error);
+        fallbackLogos.style.display = 'flex';
+    });
+
+    // Toon fallback na 5 seconden als de animatie niet start
+    setTimeout(() => {
+        if (fallbackLogos.style.display !== 'none') {
+            console.warn('Animatie niet gestart, toon fallback logo\'s');
+            fallbackLogos.style.display = 'flex';
+        }
+    }, 5000);
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const voordelen = document.querySelectorAll('#voordelen .grid > div');
+        voordelen.forEach(voordeel => {
+            voordeel.addEventListener('mouseenter', () => {
+                gsap.to(voordeel, {
+                    scale: 1.05,
+                    boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
+                    duration: 0.3
+                });
+            });
+            voordeel.addEventListener('mouseleave', () => {
+                gsap.to(voordeel, {
+                    scale: 1,
+                    boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+                    duration: 0.3
+                });
+            });
+        });
+    });
+
+    //onderdeel van de afbeelding 
+    // Wacht tot de DOM volledig is geladen
+    document.addEventListener('DOMContentLoaded', function() {
+        // Registreer de GSAP MotionPath plugin
+        gsap.registerPlugin(MotionPathPlugin);
+
+        const svg = document.querySelector('#data-flow svg');
+        const dataStreams = document.getElementById('dataStreams');
+        const dataDots = document.getElementById('dataDots');
+        
+        // Functie om een datastroom en bijbehorend bewegend bolletje te creëren
+        function createDataStream(startX, startY, endX, endY) {
+            // Creëer het pad voor de datastroom
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            path.setAttribute('d', `M${startX},${startY} L${endX},${endY}`);
+            path.setAttribute('stroke', '#60A5FA');
+            path.setAttribute('stroke-width', '2');
+            path.setAttribute('fill', 'none');
+            dataStreams.appendChild(path);
+            
+            // Creëer het bewegende bolletje
+            const dot = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            dot.setAttribute('r', '5');
+            dot.setAttribute('fill', '#FCD34D');
+            dataDots.appendChild(dot);
+            
+            // Animeer het bolletje langs het pad
+            gsap.to(dot, {
+                motionPath: {
+                    path: path,
+                    align: path,
+                    autoRotate: true,
+                    alignOrigin: [0.5, 0.5]
+                },
+                duration: 3,
+                repeat: -1,
+                yoyo: true,
+                ease: "none"
+            });
+        }
+        
+        // Definieer de posities van de logo's
+        const logoPositions = [
+            {x: 110, y: 100}, {x: 250, y: 70}, {x: 395, y: 105}, {x: 555, y: 95},
+            {x: 690, y: 110}, {x: 850, y: 100}, {x: 297, y: 247}, {x: 652, y: 232}
+        ];
+        
+        // Creëer datastromen van elk logo naar BOARD
+        logoPositions.forEach(pos => {
+            createDataStream(pos.x, pos.y, 500, 450);
+        });
+        
+        // Creëer datastroom van BOARD naar chat icoon
+        createDataStream(500, 480, 500, 620);
+
+        // Optioneel: Voeg een pulserende animatie toe aan de BOARD-tekst
+        gsap.to("#data-flow text", {
+            scale: 1.05,
+            duration: 1,
+            repeat: -1,
+            yoyo: true,
+            transformOrigin: "center center"
+        });
+
+
+        // Optioneel: Voeg een knipperende animatie toe aan het chat-icoon
+        gsap.to("#data-flow circle[cx='500'][cy='650']", {
+            opacity: 0.7,
+            duration: 0.8,
+            repeat: -1,
+            yoyo: true
+        });
+    });
+
+    // Smooth scrolling for navigation links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    });
+
+    // Form submission handling
+    function handleFormSubmit(formId, successMessage) {
+        const form = document.getElementById(formId);
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Here you would typically send the form data to a server
+            // For this example, we'll just show a success message
+            alert(successMessage);
+            form.reset();
+        });
+    }
+
+    handleFormSubmit('pilotForm', 'Bedankt voor uw aanmelding voor het pilotprogramma! We nemen spoedig contact met u op.');
+    handleFormSubmit('contactForm', 'Bedankt voor uw bericht! We zullen zo snel mogelijk contact met u opnemen.');
+    handleFormSubmit('newsletterForm', 'Bedankt voor uw aanmelding voor onze nieuwsbrief!');
+
+    // Animate elements on scroll
+    function animateOnScroll() {
+        const elements = document.querySelectorAll('.animate-on-scroll');
+        elements.forEach(el => {
+            const rect = el.getBoundingClientRect();
+            const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+            if (rect.top <= windowHeight * 0.75) {
+                el.classList.add('animate-fade-in');
+            }
+        });
+    }
+
+    window.addEventListener('scroll', animateOnScroll);
+    animateOnScroll(); // Run once on load
+
+    // Add animation classes to elements
+    document.querySelectorAll('#voordelen .grid > div, #functionaliteiten .grid > div, #getuigenissen .grid > div').forEach(el => {
+        el.classList.add('animate-on-scroll', 'opacity-0');
+    });
+    document.querySelectorAll('#over-ons .grid > div, #over-ons .mt-12').forEach(el => {
+        el.classList.add('animate-on-scroll', 'opacity-0');
+    });
+    </script>
+
+    <!-- Script om het Dashboard te laden -->
+    <script type="module">
+        import { DashboardCollectie } from '/dashboard/google.js';
+        
+        window.addEventListener('DOMContentLoaded', (event) => {
+            try {
+                ReactDOM.render(
+                    React.createElement(DashboardCollectie),
+                    document.getElementById('dashboard-collectie')
+                );
+            } catch (error) {
+                console.error("Er is een fout opgetreden bij het renderen van het dashboard:", error);
+                document.getElementById('dashboard-collectie').innerHTML = 
+                    '<p class="text-red-500">Er is een fout opgetreden bij het laden van het dashboard. Controleer de console voor meer details.</p>';
+            }
+        });
+    </script>
+</body>
+</html>

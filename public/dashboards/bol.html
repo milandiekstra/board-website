@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>bol.com Dashboard</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- React, ReactDOM, en PropTypes -->
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/prop-types@15.7.2/prop-types.min.js"></script>
+    
+    <!-- Recharts bibliotheek -->
+    <script src="https://unpkg.com/recharts@2.1.9/umd/Recharts.js"></script>
+
+    <!-- Babel standalone voor JSX transformatie -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        @media (max-width: 640px) {
+            .recharts-wrapper {
+                font-size: 12px;
+            }
+        }
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        .typing-indicator::after {
+            content: '|';
+            animation: blink 1s infinite;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <nav class="bg-blue-800 text-white p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center">
+                <span class="font-bold text-xl">BOARD</span>
+            </div>
+            <div class="hidden md:flex items-center space-x-4">
+                <a href="#home" class="hover:text-blue-300">Home</a>
+                <a href="#voordelen" class="hover:text-blue-300">Voordelen</a>
+                <a href="#pilot" class="hover:text-blue-300">Pilotprogramma</a>
+                <a href="dashboards.html" class="hover:text-blue-300">Dashboards</a>
+                <a href="#over-ons" class="hover:text-blue-300">Over Ons</a>
+                <a href="#contact" class="hover:text-blue-300">Contact</a>
+            </div>
+            <a href="#pilot" class="bg-white text-blue-800 px-4 py-2 rounded-md hover:bg-blue-100 transition duration-300">Doe mee aan de pilot</a>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-8 relative">
+        <img src="/images/systemen/logo21.png" alt="bol.com Logo" class="absolute top-0 right-0 h-16 w-auto mt-4 mr-4">
+        <div id="bolcom-dashboard"></div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 mt-8">
+        <div class="container mx-auto text-center">
+            <p>&copy; 2024 BOARD B.V. Alle rechten voorbehouden.</p>
+        </div>
+    </footer>
+
+    <script type="text/babel">
+        // Definieer de UI componenten
+        const Card = ({ children }) => <div className="p-4 bg-white shadow rounded">{children}</div>;
+        const CardHeader = ({ children }) => <div className="mb-2 border-b pb-2">{children}</div>;
+        const CardContent = ({ children }) => <div className="text-gray-700">{children}</div>;
+        const CardTitle = ({ children }) => <h2 className="text-xl font-semibold">{children}</h2>;
+        
+        const Select = ({ children, onValueChange }) => (
+            <select 
+                onChange={(e) => onValueChange(e.target.value)} 
+                className="p-2 border rounded w-full mb-4"
+            >
+                {children}
+            </select>
+        );
+            
+        const SelectTrigger = ({ children }) => <>{children}</>;
+        const SelectValue = ({ children }) => <>{children}</>;
+        const SelectContent = ({ children }) => <>{children}</>;
+        const SelectItem = ({ value, children }) => <option value={value}>{children}</option>;
+
+        const ChatbotInterface = () => {
+            const [messages, setMessages] = React.useState([]);
+            const [currentMessage, setCurrentMessage] = React.useState('');
+            const [isTyping, setIsTyping] = React.useState(false);
+            const [isChatEnded, setIsChatEnded] = React.useState(false);
+            const [showCTA, setShowCTA] = React.useState(false);
+
+            const conversation = [
+                { 
+                    question: "Wat is de beste verkopende categorie deze week en hoe verhoudt zich dat tot vorige week?", 
+                    answer: "De best verkopende categorie deze week is 'Elektronica' met een omzet van €1.250.000. Dit is een stijging van 15% ten opzichte van vorige week, voornamelijk gedreven door de lancering van een nieuw smartphonemodel."
+                },
+                { 
+                    question: "Hoe presteert ons nieuwe aanbevelingssysteem qua conversie?", 
+                    answer: "Het nieuwe aanbevelingssysteem heeft de conversieratio voor aanbevolen producten verhoogd van 2,8% naar 3,5%, een verbetering van 25%. De gemiddelde orderwaarde voor transacties met aanbevolen producten is ook gestegen met 12%."
+                },
+                { 
+                    question: "Wat is de impact van onze recente gratis verzendactie op het aantal bestellingen?", 
+                    answer: "De gratis verzendactie heeft geleid tot een toename van 22% in het aantal bestellingen vergeleken met dezelfde periode vorige maand. We zien vooral een grote stijging in de categorie 'Huis & Tuin', waar het aantal bestellingen met 35% is toegenomen."
+                }
+            ];
+
+            const simulateTyping = (text, delay = 100) => {
+                return new Promise((resolve) => {
+                    let i = 0;
+                    setIsTyping(true);
+                    const intervalId = setInterval(() => {
+                        setCurrentMessage((prev) => prev + text[i]);
+                        i++;
+                        if (i === text.length) {
+                            clearInterval(intervalId);
+                            setIsTyping(false);
+                            resolve();
+                        }
+                    }, delay);
+                });
+            };
+
+            const runConversation = async () => {
+                for (let i = 0; i < conversation.length; i++) {
+                    const { question, answer } = conversation[i];
+                    await simulateTyping(question);
+                    setMessages((prev) => [...prev, { text: question, isUser: true }]);
+                    setCurrentMessage('');
+                    await new Promise((resolve) => setTimeout(resolve, 500));
+                    setMessages((prev) => [...prev, { text: answer, isUser: false }]);
+                    if (i < conversation.length - 1) {
+                        await new Promise((resolve) => setTimeout(resolve, 1000));
+                    }
+                }
+                setIsChatEnded(true);
+                await new Promise((resolve) => setTimeout(resolve, 2000));
+                setShowCTA(true);
+            };
+
+            React.useEffect(() => {
+                runConversation();
+            }, []);
+
+            return (
+                <div className={`bg-white rounded-lg shadow-md p-4 max-w-2xl mx-auto mb-8 relative transition-all duration-500 ${isChatEnded ? 'opacity-50' : ''}`}>
+                    <h3 className="text-xl font-bold mb-4 text-blue-800">Chat met BOARD AI</h3>
+                    <div className="space-y-4 mb-4">
+                        {messages.map((message, index) => (
+                            <div key={index} className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}>
+                                <div className={`max-w-3/4 p-2 rounded-lg ${
+                                    message.isUser 
+                                        ? 'bg-blue-800 text-white' 
+                                        : 'bg-gray-200 text-black'
+                                }`}>
+                                    {message.text}
+                                </div>
+                            </div>
+                        ))}
+                        {isTyping && (
+                            <div className="flex justify-end">
+                                <div className="max-w-3/4 p-2 rounded-lg bg-blue-800 text-white typing-indicator">
+                                    {currentMessage}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                    {showCTA && (
+                        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 transition-opacity duration-500">
+                            <button className="bg-blue-800 text-white font-bold py-3 px-6 rounded-lg shadow-lg hover:bg-blue-900 transform hover:scale-105 transition duration-300">
+                                Ook chatten met je bol.com data? Meld je aan voor het pilotprogramma!
+                            </button>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        const BolcomDashboard = () => {
+            const [selectedMetric, setSelectedMetric] = React.useState('omzet');
+
+            const data = [
+                { datum: '01-08-2024', omzet: 1250000, bestellingen: 42000, gemiddeldeBestelwaarde: 29.76, bezoekers: 500000, conversiePercentage: 8.4 },
+                { datum: '02-08-2024', omzet: 1320000, bestellingen: 45000, gemiddeldeBestelwaarde: 29.33, bezoekers: 520000, conversiePercentage: 8.65 },
+                { datum: '03-08-2024', omzet: 1180000, bestellingen: 40000, gemiddeldeBestelwaarde: 29.50, bezoekers: 480000, conversiePercentage: 8.33 },
+                { datum: '04-08-2024', omzet: 1400000, bestellingen: 47000, gemiddeldeBestelwaarde: 29.79, bezoekers: 550000, conversiePercentage: 8.55 },
+                { datum: '05-08-2024', omzet: 1350000, bestellingen: 46000, gemiddeldeBestelwaarde: 29.35, bezoekers: 530000, conversiePercentage: 8.68 },
+            ];
+
+            const metrics = [
+                { value: 'omzet', label: 'Omzet' },
+                { value: 'bestellingen', label: 'Aantal bestellingen' },
+                { value: 'gemiddeldeBestelwaarde', label: 'Gemiddelde bestelwaarde' },
+                { value: 'bezoekers', label: 'Aantal bezoekers' },
+                { value: 'conversiePercentage', label: 'Conversie percentage' },
+            ];
+
+            const COLORS = ['#0000A4', '#0066CC', '#FF6600', '#FFCC00', '#84888B'];
+
+            const formatCurrency = (value) => {
+                return new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' }).format(value);
+            };
+
+            const formatNumber = (num) => {
+                return new Intl.NumberFormat('nl-NL', { maximumFractionDigits: 2 }).format(num);
+            };
+
+            const calculateTotals = () => {
+                return data.reduce((acc, curr) => {
+                    acc.totaalOmzet += curr.omzet;
+                    acc.totaalBestellingen += curr.bestellingen;
+                    acc.totaalBezoekers += curr.bezoekers;
+                    return acc;
+                }, { totaalOmzet: 0, totaalBestellingen: 0, totaalBezoekers: 0 });
+            };
+
+            const totals = calculateTotals();
+            const gemiddeldeConversie = (totals.totaalBestellingen / totals.totaalBezoekers) * 100;
+
+            return (
+                <div className="space-y-8 max-w-4xl mx-auto">
+                    <h2 className="text-3xl font-bold mb-6 text-blue-800">bol.com Verkoopprestaties</h2>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Totale Omzet</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <p className="text-2xl font-semibold text-blue-800">{formatCurrency(totals.totaalOmzet)}</p>
+                            </CardContent>
+                        </Card>
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Totaal Aantal Bestellingen</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <p className="text-2xl font-semibold text-blue-800">{formatNumber(totals.totaalBestellingen)}</p>
+                            </CardContent>
+                        </Card>
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Gemiddelde Bestelwaarde</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <p className="text-2xl font-semibold text-blue-800">{formatCurrency(totals.totaalOmzet / totals.totaalBestellingen)}</p>
+                            </CardContent>
+                        </Card>
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Conversie Percentage</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <p className="text-2xl font-semibold text-blue-800">{formatNumber(gemiddeldeConversie)}%</p>
+                            </CardContent>
+                        </Card>
+                    </div>
+
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Metriek over tijd</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <Select onValueChange={setSelectedMetric} defaultValue={selectedMetric}>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Selecteer metriek" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {metrics.map((metric) => (
+                                        <SelectItem key={metric.value} value={metric.value}>
+                                            {metric.label}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                            <Recharts.ResponsiveContainer width="100%" height={300}>
+                                <Recharts.LineChart data={data}>
+                                    <Recharts.CartesianGrid strokeDasharray="3 3" />
+                                    <Recharts.XAxis dataKey="datum" />
+                                    <Recharts.YAxis />
+                                    <Recharts.Tooltip />
+                                    <Recharts.Legend />
+                                    <Recharts.Line type="monotone" dataKey={selectedMetric} stroke="#0000A4" name={metrics.find(m => m.value === selectedMetric).label} />
+                                </Recharts.LineChart>
+                            </Recharts.ResponsiveContainer>
+                        </CardContent>
+                    </Card>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Top 5 Categorieën</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <Recharts.ResponsiveContainer width="100%" height={300}>
+                                    <Recharts.BarChart data={[
+                                        { naam: "Elektronica", omzet: 450000 },
+                                        { naam: "Boeken", omzet: 350000 },
+                                        { naam: "Speelgoed", omzet: 280000 },
+                                        { naam: "Huishouden", omzet: 220000 },
+                                        { naam: "Kleding", omzet: 180000 }
+                                    ]}>
+                                        <Recharts.CartesianGrid strokeDasharray="3 3" />
+                                        <Recharts.XAxis dataKey="naam" />
+                                        <Recharts.YAxis />
+                                        <Recharts.Tooltip />
+                                        <Recharts.Bar dataKey="omzet" fill="#0000A4" />
+                                    </Recharts.BarChart>
+                                </Recharts.ResponsiveContainer>
+                            </CardContent>
+                        </Card>
+
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Klantentype Verdeling</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <Recharts.ResponsiveContainer width="100%" height={300}>
+                                    <Recharts.PieChart>
+                                        <Recharts.Pie
+                                            data={[
+                                                { name: 'Nieuwe klanten', value: 35 },
+                                                { name: 'Terugkerende klanten', value: 45 },
+                                                { name: 'Select-leden', value: 20 }
+                                            ]}
+                                            cx="50%"
+                                            cy="50%"
+                                            labelLine={false}
+                                            outerRadius={80}
+                                            fill="#0000A4"
+                                            dataKey="value"
+                                            label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                                        >
+                                            {data.map((entry, index) => (
+                                                <Recharts.Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                            ))}
+                                        </Recharts.Pie>
+                                        <Recharts.Tooltip />
+                                    </Recharts.PieChart>
+                                </Recharts.ResponsiveContainer>
+                            </CardContent>
+                        </Card>
+                    </div>
+                </div>
+            );
+        };
+
+        const CombinedDashboard = () => {
+            return (
+                <React.Fragment>
+                    <div className="my-8 text-center">
+                        <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-blue-800 mb-4">
+                            Krijg inzichten die je normaal niet krijgt
+                        </h2>
+                        <h3 className="text-xl md:text-2xl lg:text-3xl font-semibold text-gray-700">
+                            met BOARD AI
+                        </h3>
+                    </div>
+                    
+                    <ChatbotInterface />
+                    <BolcomDashboard />
+                </React.Fragment>
+            );
+        };
+
+        ReactDOM.render(
+            <React.StrictMode>
+                <CombinedDashboard />
+            </React.StrictMode>,
+            document.getElementById('bolcom-dashboard')
+        );
+    </script>
+</body>
+</html>
