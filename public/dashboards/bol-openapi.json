@@ -1,0 +1,55 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "BoardApp Dashboard API",
+      "version": "1.0.0",
+      "description": "API specification for retrieving dashboard data from BoardApp"
+    },
+    "servers": [
+      {
+        "url": "https://boardapp-opal.vercel.app"
+      }
+    ],
+    "paths": {
+      "/dashboards/bol.json": {
+        "get": {
+          "summary": "Retrieve dashboard data",
+          "description": "Get the dashboard data for BoardApp",
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "data": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string"
+                            },
+                            "name": {
+                              "type": "string"
+                            },
+                            "type": {
+                              "type": "string"
+                            },
+                            "data": {
+                              "type": "object"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
