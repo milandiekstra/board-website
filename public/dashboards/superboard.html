@@ -8,10 +8,13 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- React, ReactDOM, en Recharts -->
-    <script src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/recharts@2.1.9/umd/Recharts.min.js"></script>
+    <!-- React, ReactDOM, en PropTypes -->
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/prop-types@15.7.2/prop-types.min.js"></script>
+    
+    <!-- Recharts bibliotheek -->
+    <script src="https://unpkg.com/recharts@2.1.9/umd/Recharts.js"></script>
 
     <!-- Babel standalone voor JSX transformatie -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -62,10 +65,6 @@
     </footer>
 
     <script type="text/babel">
-        const { useState, useEffect } = React;
-        const { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, PieChart, Pie, Cell, BarChart, Bar } = Recharts;
-
-        // UI Components
         const Card = ({ children, className }) => (
             <div className={`bg-white shadow-lg rounded-lg overflow-hidden ${className}`}>
                 {children}
@@ -75,10 +74,9 @@
         const CardContent = ({ children }) => <div className="p-6">{children}</div>;
         const CardTitle = ({ children }) => <h2 className="text-xl font-semibold text-gray-800">{children}</h2>;
         
-        const Select = ({ children, onValueChange, defaultValue }) => (
+        const Select = ({ children, onValueChange }) => (
             <select 
-                onChange={(e) => onValueChange(e.target.value)}
-                defaultValue={defaultValue}
+                onChange={(e) => onValueChange(e.target.value)} 
                 className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
             >
                 {children}
@@ -87,57 +85,103 @@
         
         const SelectItem = ({ value, children }) => <option value={value}>{children}</option>;
 
-        // Fictieve geïntegreerde data voor het SuperBoard dashboard
-        const superBoardData = [
-            { 
-                datum: '01-08-2024', 
-                totaleCrossChannelOmzet: 2850000,
-                totaleCrossChannelBestellingen: 95000,
-                gemiddeldeCrossChannelOrderwaarde: 30,
-                websiteBezoeken: 750000,
-                shopifyOmzet: 1250000,
-                bolcomOmzet: 1600000,
-                leadConversieRatio: 12.5,
-                klantenRetentieScore: 85,
-                socialMediaEngagementScore: 7800,
-                marketingROI: 450,
-                voorraadEfficiëntie: 92,
-                klanttevredenheidScore: 4.7,
-                gemiddeldeKlantenlevensduurWaarde: 750,
-                omzetPerMarketingKanaal: {
-                    'Organisch zoeken': 800000,
-                    'Social Media': 600000,
-                    'E-mail marketing': 500000,
-                    'Betaalde advertenties': 700000,
-                    'Partnerprogramma\'s': 250000
-                },
-                productCategorieVerdeling: {
-                    'Elektronica': 35,
-                    'Mode': 25,
-                    'Huis & Tuin': 20,
-                    'Sport': 12,
-                    'Boeken': 8
-                }
-            },
-            // Meer datapunten hier toevoegen voor een realistischer beeld
-        ];
+        const ChatbotInterface = () => {
+            const [messages, setMessages] = React.useState([]);
+            const [currentMessage, setCurrentMessage] = React.useState('');
+            const [isTyping, setIsTyping] = React.useState(false);
+            const [isChatEnded, setIsChatEnded] = React.useState(false);
 
-        // Nieuwe geavanceerde KPI's en inzichten
-        const calculateAdvancedKPIs = (data) => {
-            return {
-                crossChannelConversieRatio: (data.totaleCrossChannelBestellingen / data.websiteBezoeken) * 100,
-                omzetDiversificatieIndex: 1 - Math.abs(data.shopifyOmzet - data.bolcomOmzet) / (data.shopifyOmzet + data.bolcomOmzet),
-                klantLevenscyclusEfficiëntie: (data.gemiddeldeKlantenlevensduurWaarde / data.gemiddeldeCrossChannelOrderwaarde) * (data.klantenRetentieScore / 100),
-                marketingEffectiviteitsScore: (data.socialMediaEngagementScore / 10000) * (data.marketingROI / 500) * 100,
-                operationeleEfficiëntieIndex: (data.voorraadEfficiëntie / 100) * (data.klanttevredenheidScore / 5) * 100,
-                omzetGroeiPotentieel: (1 - (data.leadConversieRatio / 100)) * data.gemiddeldeKlantenlevensduurWaarde * (data.klanttevredenheidScore / 5)
+            const conversation = [
+                { question: "Wat is onze Cross-Channel Synergie Score?", answer: "Onze huidige Cross-Channel Synergie Score is 7.8 op een schaal van 10. Deze score is gebaseerd op de integratie en onderlinge versterking van onze verschillende verkoopkanalen." },
+                { question: "Hoe beïnvloedt onze sociale media strategie de cross-channel conversie?", answer: "Onze sociale media strategie heeft een significant effect op onze cross-channel conversie. De Social Media Impact Multiplier (SMIM) voor onze cross-channel conversie is momenteel 1.35, wat betekent dat klanten die via sociale media betrokken zijn, 35% meer kans hebben om over meerdere kanalen te converteren." },
+                { question: "Wat is het effect van onze recente prijsstrategie op de Klant Levenscyclus Efficiëntie?", answer: "Onze recente dynamische prijsstrategie heeft een positief effect gehad op de Klant Levenscyclus Efficiëntie (KLE). De KLE is gestegen van 25.3 naar 27.8, een verbetering van 9.9%." }
+            ];
+
+            const simulateTyping = (text, delay = 30) => {
+                return new Promise((resolve) => {
+                    let i = 0;
+                    setIsTyping(true);
+                    const intervalId = setInterval(() => {
+                        setCurrentMessage((prev) => prev + text[i]);
+                        i++;
+                        if (i === text.length) {
+                            clearInterval(intervalId);
+                            setIsTyping(false);
+                            resolve();
+                        }
+                    }, delay);
+                });
             };
+
+            const runConversation = async () => {
+                for (let i = 0; i < conversation.length; i++) {
+                    const { question, answer } = conversation[i];
+                    await simulateTyping(question);
+                    setMessages((prev) => [...prev, { text: question, isUser: true }]);
+                    setCurrentMessage('');
+                    await new Promise((resolve) => setTimeout(resolve, 500));
+                    await simulateTyping(answer);
+                    setMessages((prev) => [...prev, { text: answer, isUser: false }]);
+                    setCurrentMessage('');
+                    if (i < conversation.length - 1) {
+                        await new Promise((resolve) => setTimeout(resolve, 1000));
+                    }
+                }
+                setIsChatEnded(true);
+            };
+
+            React.useEffect(() => {
+                runConversation();
+            }, []);
+
+            return (
+                <Card className="h-[500px] flex flex-col relative mb-8">
+                    <CardHeader>
+                        <CardTitle>Chat met SuperBoard AI</CardTitle>
+                    </CardHeader>
+                    <CardContent className="flex-grow overflow-y-auto">
+                        <div className="space-y-4">
+                            {messages.map((message, index) => (
+                                <div key={index} className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}>
+                                    <div className={`max-w-3/4 p-2 rounded-lg ${
+                                        message.isUser 
+                                            ? 'bg-purple-600 text-white' 
+                                            : 'bg-gray-200 text-black'
+                                    }`}>
+                                        {message.text}
+                                    </div>
+                                </div>
+                            ))}
+                            {isTyping && (
+                                <div className="flex justify-start">
+                                    <div className="max-w-3/4 p-2 rounded-lg bg-gray-200 text-black typing-indicator">
+                                        {currentMessage}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </CardContent>
+                    {isChatEnded && (
+                        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                            <button className="bg-purple-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg hover:bg-purple-700 transform hover:scale-105 transition duration-300 z-10">
+                                Wil je ook chatten met je cross-channel data?
+                            </button>
+                        </div>
+                    )}
+                </Card>
+            );
         };
 
-        const advancedKPIs = calculateAdvancedKPIs(superBoardData[0]);
-
         const SuperBoardDashboard = () => {
-            const [selectedMetric, setSelectedMetric] = useState('totaleCrossChannelOmzet');
+            const [selectedMetric, setSelectedMetric] = React.useState('totaleCrossChannelOmzet');
+
+            const data = [
+                { datum: '01-08-2024', totaleCrossChannelOmzet: 2850000, crossChannelConversieRatio: 12.5, omzetDiversificatieIndex: 0.85, klantLevenscyclusEfficiëntie: 27.8, marketingEffectiviteitsScore: 89, operationeleEfficiëntieIndex: 92, omzetGroeiPotentieel: 450000 },
+                { datum: '02-08-2024', totaleCrossChannelOmzet: 3020000, crossChannelConversieRatio: 13.1, omzetDiversificatieIndex: 0.87, klantLevenscyclusEfficiëntie: 28.2, marketingEffectiviteitsScore: 91, operationeleEfficiëntieIndex: 93, omzetGroeiPotentieel: 480000 },
+                { datum: '03-08-2024', totaleCrossChannelOmzet: 2780000, crossChannelConversieRatio: 12.2, omzetDiversificatieIndex: 0.84, klantLevenscyclusEfficiëntie: 27.5, marketingEffectiviteitsScore: 88, operationeleEfficiëntieIndex: 91, omzetGroeiPotentieel: 430000 },
+                { datum: '04-08-2024', totaleCrossChannelOmzet: 3150000, crossChannelConversieRatio: 13.8, omzetDiversificatieIndex: 0.89, klantLevenscyclusEfficiëntie: 28.9, marketingEffectiviteitsScore: 93, operationeleEfficiëntieIndex: 94, omzetGroeiPotentieel: 510000 },
+                { datum: '05-08-2024', totaleCrossChannelOmzet: 2950000, crossChannelConversieRatio: 13.0, omzetDiversificatieIndex: 0.86, klantLevenscyclusEfficiëntie: 28.0, marketingEffectiviteitsScore: 90, operationeleEfficiëntieIndex: 92, omzetGroeiPotentieel: 470000 },
+            ];
 
             const metrics = [
                 { value: 'totaleCrossChannelOmzet', label: 'Totale Cross-Channel Omzet' },
@@ -152,74 +196,51 @@
             const COLORS = ['#8884d8', '#82ca9d', '#ffc658', '#ff7300', '#0088FE'];
 
             const formatCurrency = (value) => {
-                return new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR' }).format(value);
-            };
-
-            const formatPercentage = (value) => {
-                return new Intl.NumberFormat('nl-NL', { style: 'percent', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value / 100);
+                return new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(value);
             };
 
             const formatNumber = (num) => {
                 return new Intl.NumberFormat('nl-NL', { maximumFractionDigits: 2 }).format(num);
             };
 
-            return (
-                <div className="space-y-8 max-w-7xl mx-auto">
-                    <h1 className="text-4xl font-bold mb-8 text-center text-purple-800">SuperBoard Alles-in-één Dashboard</h1>
+            const calculateTotals = () => {
+                return data.reduce((acc, curr) => {
+                    acc.totaalOmzet += curr.totaleCrossChannelOmzet;
+                    acc.gemiddeldeConversieRatio += curr.crossChannelConversieRatio;
+                    acc.gemiddeldeOmzetDiversificatie += curr.omzetDiversificatieIndex;
+                    return acc;
+                }, { totaalOmzet: 0, gemiddeldeConversieRatio: 0, gemiddeldeOmzetDiversificatie: 0 });
+            };
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            const totals = calculateTotals();
+            const gemiddeldeConversieRatio = totals.gemiddeldeConversieRatio / data.length;
+            const gemiddeldeOmzetDiversificatie = totals.gemiddeldeOmzetDiversificatie / data.length;
+
+            return (
+                <div className="space-y-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                         <Card>
                             <CardHeader>
-                                <CardTitle>Cross-Channel Conversie Ratio</CardTitle>
+                                <CardTitle>Totale Cross-Channel Omzet</CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <p className="text-3xl font-semibold text-purple-600">{formatPercentage(advancedKPIs.crossChannelConversieRatio)}</p>
-                                <p className="text-sm text-gray-500 mt-2">Effectiviteit van alle verkoopkanalen samen</p>
+                                <p className="text-2xl font-semibold text-purple-600">{formatCurrency(totals.totaalOmzet)}</p>
                             </CardContent>
                         </Card>
                         <Card>
                             <CardHeader>
-                                <CardTitle>Omzet Diversificatie Index</CardTitle>
+                                <CardTitle>Gem. Cross-Channel Conversie Ratio</CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <p className="text-3xl font-semibold text-purple-600">{formatNumber(advancedKPIs.omzetDiversificatieIndex)}</p>
-                                <p className="text-sm text-gray-500 mt-2">Balans tussen verschillende verkoopkanalen</p>
+                                <p className="text-2xl font-semibold text-purple-600">{formatNumber(gemiddeldeConversieRatio)}%</p>
                             </CardContent>
                         </Card>
                         <Card>
                             <CardHeader>
-                                <CardTitle>Klant Levenscyclus Efficiëntie</CardTitle>
+                                <CardTitle>Gem. Omzet Diversificatie Index</CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <p className="text-3xl font-semibold text-purple-600">{formatNumber(advancedKPIs.klantLevenscyclusEfficiëntie)}</p>
-                                <p className="text-sm text-gray-500 mt-2">Waarde en retentie over de klantlevensduur</p>
-                            </CardContent>
-                        </Card>
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Marketing Effectiviteits Score</CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <p className="text-3xl font-semibold text-purple-600">{formatNumber(advancedKPIs.marketingEffectiviteitsScore)}</p>
-                                <p className="text-sm text-gray-500 mt-2">Combinatie van engagement en ROI</p>
-                            </CardContent>
-                        </Card>
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Operationele Efficiëntie Index</CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <p className="text-3xl font-semibold text-purple-600">{formatNumber(advancedKPIs.operationeleEfficiëntieIndex)}</p>
-                                <p className="text-sm text-gray-500 mt-2">Balans tussen voorraad en klanttevredenheid</p>
-                            </CardContent>
-                        </Card>
-                        <Card>
-                            <CardHeader>
-                                <CardTitle>Omzet Groei Potentieel</CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <p className="text-3xl font-semibold text-purple-600">{formatCurrency(advancedKPIs.omzetGroeiPotentieel)}</p>
-                                <p className="text-sm text-gray-500 mt-2">Potentiële omzetgroei gebaseerd op huidige metrics</p>
+                                <p className="text-2xl font-semibold text-purple-600">{formatNumber(gemiddeldeOmzetDiversificatie)}</p>
                             </CardContent>
                         </Card>
                     </div>
@@ -236,29 +257,34 @@
                                     </SelectItem>
                                 ))}
                             </Select>
-                            <ResponsiveContainer width="100%" height={400}>
-                                <LineChart data={superBoardData}>
-                                    <CartesianGrid strokeDasharray="3 3" />
-                                    <XAxis dataKey="datum" />
-                                    <YAxis />
-                                    <Tooltip />
-                                    <Legend />
-                                    <Line type="monotone" dataKey={selectedMetric} stroke="#8884d8" name={metrics.find(m => m.value === selectedMetric).label} />
-                                </LineChart>
-                            </ResponsiveContainer>
+                            <Recharts.ResponsiveContainer width="100%" height={300}>
+                                <Recharts.LineChart data={data}>
+                                    <Recharts.CartesianGrid strokeDasharray="3 3" />
+                                    <Recharts.XAxis dataKey="datum" />
+                                    <Recharts.YAxis />
+                                    <Recharts.Tooltip />
+                                    <Recharts.Legend />
+                                    <Recharts.Line type="monotone" dataKey={selectedMetric} stroke="#8884d8" name={metrics.find(m => m.value === selectedMetric).label} />
+                                </Recharts.LineChart>
+                            </Recharts.ResponsiveContainer>
                         </CardContent>
                     </Card>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <Card>
                             <CardHeader>
-                                <CardTitle>Omzet per Marketing Kanaal</CardTitle>
+                                <CardTitle>Omzet per Verkoopkanaal</CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <ResponsiveContainer width="100%" height={300}>
-                                    <PieChart>
-                                        <Pie
-                                            data={Object.entries(superBoardData[0].omzetPerMarketingKanaal).map(([name, value]) => ({ name, value }))}
+                                <Recharts.ResponsiveContainer width="100%" height={300}>
+                                    <Recharts.PieChart>
+                                        <Recharts.Pie
+                                            data={[
+                                                { name: 'Webshop', value: 1500000 },
+                                                { name: 'Bol.com', value: 800000 },
+                                                { name: 'Amazon', value: 400000 },
+                                                { name: 'Fysieke winkels', value: 250000 }
+                                            ]}
                                             cx="50%"
                                             cy="50%"
                                             labelLine={false}
@@ -267,31 +293,34 @@
                                             dataKey="value"
                                             label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                                         >
-                                            {Object.entries(superBoardData[0].omzetPerMarketingKanaal).map((entry, index) => (
-                                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                            {data.map((entry, index) => (
+                                                <Recharts.Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                                             ))}
-                                        </Pie>
-                                        <Tooltip />
-                                    </PieChart>
-                                </ResponsiveContainer>
+                                        </Recharts.Pie>
+                                        <Recharts.Tooltip />
+                                    </Recharts.PieChart>
+                                </Recharts.ResponsiveContainer>
                             </CardContent>
                         </Card>
 
                         <Card>
                             <CardHeader>
-                                <CardTitle>Product Categorie Verdeling</CardTitle>
+                                <CardTitle>Cross-Channel KPI's</CardTitle>
                             </CardHeader>
                             <CardContent>
-                                <ResponsiveContainer width="100%" height={300}>
-                                    <BarChart data={Object.entries(superBoardData[0].productCategorieVerdeling).map(([name, value]) => ({ name, value }))}>
-                                        <CartesianGrid strokeDasharray="3 3" />
-                                        <XAxis dataKey="name" />
-                                        <YAxis />
-                                        <Tooltip />
-                                        <Legend />
-                                        <Bar dataKey="value" fill="#8884d8" />
-                                    </BarChart>
-                                </ResponsiveContainer>
+                                <Recharts.ResponsiveContainer width="100%" height={300}>
+                                    <Recharts.BarChart data={[
+                                        { name: 'Klant Levenscyclus Efficiëntie', waarde: data[data.length - 1].klantLevenscyclusEfficiëntie },
+                                        { name: 'Marketing Effectiviteits Score', waarde: data[data.length - 1].marketingEffectiviteitsScore },
+                                        { name: 'Operationele Efficiëntie Index', waarde: data[data.length - 1].operationeleEfficiëntieIndex }
+                                    ]}>
+                                        <Recharts.CartesianGrid strokeDasharray="3 3" />
+                                        <Recharts.XAxis dataKey="name" />
+                                        <Recharts.YAxis />
+                                        <Recharts.Tooltip />
+                                        <Recharts.Bar dataKey="waarde" fill="#8884d8" />
+                                    </Recharts.BarChart>
+                                </Recharts.ResponsiveContainer>
                             </CardContent>
                         </Card>
                     </div>
@@ -299,125 +328,27 @@
             );
         };
 
-        const SuperBoardAI = () => {
-            const [messages, setMessages] = useState([]);
-            const [currentMessage, setCurrentMessage] = useState('');
-            const [isTyping, setIsTyping] = useState(false);
-            const [userInput, setUserInput] = useState('');
-
-            const conversation = [
-                {
-                    question: "Wat is onze Cross-Channel Synergie Score en hoe kunnen we die verbeteren?",
-                    answer: "Onze huidige Cross-Channel Synergie Score is 7.8 op een schaal van 10. Deze score is gebaseerd op de integratie en onderlinge versterking van onze verschillende verkoopkanalen. Om deze te verbeteren, kunnen we focussen op drie gebieden:\n\n1. Dataharmonisatie: Zorg voor een naadloze integratie van klantgegevens tussen Shopify, bol.com en andere kanalen. Dit zal leiden tot betere gepersonaliseerde ervaringen.\n\n2. Consistente merkervaring: Stem de gebruikerservaring, productpresentatie en klantenservice af over alle kanalen.\n\n3. Geoptimaliseerde voorraadallocatie: Gebruik AI om voorspellingen te maken en voorraad dynamisch te verdelen over kanalen op basis van vraag en marges."
-                },
-                {
-                    question: "Hoe beïnvloedt onze sociale media strategie de cross-channel conversie?",
-                    answer: "Onze sociale media strategie heeft een significant effect op onze cross-channel conversie. De Social Media Impact Multiplier (SMIM) voor onze cross-channel conversie is momenteel 1.35, wat betekent dat klanten die via sociale media betrokken zijn, 35% meer kans hebben om over meerdere kanalen te converteren.\n\nSpecifieke inzichten:\n1. Instagram-stories leiden tot 22% meer cross-channel verkeer naar zowel onze Shopify-store als bol.com-pagina.\n2. LinkedIn-posts over productinnovaties verhogen de B2B cross-channel conversies met 18%.\n3. User-generated content op TikTok heeft geleid tot een 40% stijging in de verkoop van trending producten over alle kanalen.\n\nOm dit verder te verbeteren, zouden we kunnen focussen op:\n- Geïntegreerde social commerce-functionaliteit\n- Verbeterde retargeting-strategieën over verschillende platforms\n- Het stimuleren van meer user-generated content met channel-specifieke hashtags"
-                },
-                {
-                    question: "Wat is het effect van onze recente prijsstrategie op de Klant Levenscyclus Efficiëntie?",
-                    answer: "Onze recente dynamische prijsstrategie heeft een positief effect gehad op de Klant Levenscyclus Efficiëntie (KLE). De KLE is gestegen van 25.3 naar 27.8, een verbetering van 9.9%.\n\nBelangrijke observaties:\n1. Cross-channel klanten: De gemiddelde orderwaarde voor klanten die op meerdere platforms kopen is gestegen met 15%, wat wijst op succesvol up-selling en cross-selling.\n2. Retentie: De klantbehoudpercentages zijn verbeterd met 7% over alle kanalen, wat duidt op een betere prijs-waardeperceptie.\n3. Segmentspecifieke impact: De KLE voor het premium klantsegment is met 12% gestegen, terwijl het voor het prijsgevoelige segment met 5% is toegenomen.\n\nAanbevelingen voor verdere verbetering:\n- Implementeer AI-gedreven persoonlijke prijsstellingen op basis van klantwaarde en aankoopgeschiedenis.\n- Ontwikkel kanaalspecifieke loyaliteitsprogramma's die de unieke voordelen van elk platform benutten.\n- Introduceer bundel-aanbiedingen die producten van verschillende categorieën combineren om de gemiddelde orderwaarde te verhogen."
-                }
-            ];
-
-            const simulateTyping = (text, delay = 50) => {
-                return new Promise((resolve) => {
-                    let i = 0;
-                    setIsTyping(true);
-                    const intervalId = setInterval(() => {
-                        setCurrentMessage((prev) => prev + text[i]);
-                        i++;
-                        if (i === text.length) {
-                            clearInterval(intervalId);
-                            setIsTyping(false);
-                            resolve();
-                        }
-                    }, delay);
-                });
-            };
-
-            const handleSendMessage = async () => {
-                if (userInput.trim() === '') return;
-
-                setMessages((prev) => [...prev, { text: userInput, isUser: true }]);
-                setUserInput('');
-
-                // Simulate AI thinking
-                await new Promise((resolve) => setTimeout(resolve, 1000));
-
-                // Find a relevant answer or generate a default response
-                const relevantConversation = conversation.find(c => 
-                    c.question.toLowerCase().includes(userInput.toLowerCase()) || 
-                    userInput.toLowerCase().includes(c.question.toLowerCase())
-                );
-
-                const aiResponse = relevantConversation 
-                    ? relevantConversation.answer 
-                    : "Bedankt voor je vraag. Als SuperBoard AI kan ik gedetailleerde inzichten geven over onze cross-channel prestaties, maar voor deze specifieke vraag heb ik meer context nodig. Kun je meer details geven over welk aspect van onze operatie je wilt analyseren?";
-
-                await simulateTyping(aiResponse);
-                setMessages((prev) => [...prev, { text: aiResponse, isUser: false }]);
-            };
-
+        const CombinedDashboard = () => {
             return (
-                <Card className="mt-12">
-                    <CardHeader>
-                        <CardTitle>SuperBoard AI Assistent</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="h-96 overflow-y-auto mb-4 p-4 border border-gray-200 rounded">
-                            {messages.map((message, index) => (
-                                <div key={index} className={`mb-4 ${message.isUser ? 'text-right' : 'text-left'}`}>
-                                    <span className={`inline-block p-2 rounded-lg ${
-                                        message.isUser 
-                                            ? 'bg-purple-600 text-white' 
-                                            : 'bg-gray-200 text-black'
-                                    }`}>
-                                        {message.text}
-                                    </span>
-                                </div>
-                            ))}
-                            {isTyping && (
-                                <div className="text-left">
-                                    <span className="inline-block p-2 rounded-lg bg-gray-200 text-black typing-indicator">
-                                        {currentMessage}
-                                    </span>
-                                </div>
-                            )}
-                        </div>
-                        <div className="flex">
-                            <input
-                                type="text"
-                                value={userInput}
-                                onChange={(e) => setUserInput(e.target.value)}
-                                onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                                placeholder="Stel een vraag aan SuperBoard AI..."
-                                className="flex-grow p-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-purple-600"
-                            />
-                            <button
-                                onClick={handleSendMessage}
-                                className="bg-purple-600 text-white p-2 rounded-r-md hover:bg-purple-700 transition duration-300"
-                            >
-                                Verstuur
-                            </button>
-                        </div>
-                    </CardContent>
-                </Card>
-            );
-        };
-
-        const SuperBoardDashboardWithAI = () => {
-            return (
-                <React.Fragment>
+                <div className="space-y-8">
+                    <div className="my-8 text-center">
+                        <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-purple-800 mb-4">
+                            SuperBoard: Cross-Channel Inzichten
+                        </h2>
+                        <h3 className="text-xl md:text-2xl lg:text-3xl font-semibold text-gray-700">
+                            Optimaliseer uw omnichannel prestaties
+                        </h3>
+                    </div>
+                    
+                    <ChatbotInterface />
                     <SuperBoardDashboard />
-                    <SuperBoardAI />
-                </React.Fragment>
+                </div>
             );
         };
 
         ReactDOM.render(
             <React.StrictMode>
-                <SuperBoardDashboardWithAI />
+                <CombinedDashboard />
             </React.StrictMode>,
             document.getElementById('superboard-dashboard')
         );
