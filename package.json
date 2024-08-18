@@ -1,5 +1,7 @@
 {
+  "type": "module",
   "dependencies": {
+    "@types/node": "^22.4.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "recharts": "^2.12.7"
