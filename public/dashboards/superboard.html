@@ -8,13 +8,10 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- React, ReactDOM, en PropTypes -->
-    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/prop-types@15.7.2/prop-types.min.js"></script>
-    
-    <!-- Recharts bibliotheek -->
-    <script src="https://unpkg.com/recharts@2.1.9/umd/Recharts.js"></script>
+    <!-- React, ReactDOM, en Recharts -->
+    <script src="https://unpkg.com/react@17/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/recharts@2.1.9/umd/Recharts.min.js"></script>
 
     <!-- Babel standalone voor JSX transformatie -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -34,11 +31,6 @@
         .typing-indicator::after {
             content: '|';
             animation: blink 1s infinite;
-        }
-        @media (max-width: 640px) {
-            .recharts-wrapper {
-                font-size: 12px;
-            }
         }
     </style>
 </head>
@@ -66,15 +58,13 @@
     <footer class="bg-gray-800 text-white p-6 mt-12">
         <div class="container mx-auto text-center">
             <p>&copy; 2024 SuperBoard by BOARD B.V. Alle rechten voorbehouden.</p>
-            <div class="mt-4 flex justify-center space-x-6">
-                <a href="#" class="hover:text-purple-400 transition duration-300">Privacy Policy</a>
-                <a href="#" class="hover:text-purple-400 transition duration-300">Terms of Service</a>
-                <a href="#" class="hover:text-purple-400 transition duration-300">Contact</a>
-            </div>
         </div>
     </footer>
 
     <script type="text/babel">
+        const { useState, useEffect } = React;
+        const { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, PieChart, Pie, Cell, BarChart, Bar } = Recharts;
+
         // UI Components
         const Card = ({ children, className }) => (
             <div className={`bg-white shadow-lg rounded-lg overflow-hidden ${className}`}>
@@ -85,9 +75,10 @@
         const CardContent = ({ children }) => <div className="p-6">{children}</div>;
         const CardTitle = ({ children }) => <h2 className="text-xl font-semibold text-gray-800">{children}</h2>;
         
-        const Select = ({ children, onValueChange }) => (
+        const Select = ({ children, onValueChange, defaultValue }) => (
             <select 
-                onChange={(e) => onValueChange(e.target.value)} 
+                onChange={(e) => onValueChange(e.target.value)}
+                defaultValue={defaultValue}
                 className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
             >
                 {children}
@@ -128,7 +119,7 @@
                     'Boeken': 8
                 }
             },
-            // ... meer datapunten voor andere dagen
+            // Meer datapunten hier toevoegen voor een realistischer beeld
         ];
 
         // Nieuwe geavanceerde KPI's en inzichten
@@ -146,7 +137,7 @@
         const advancedKPIs = calculateAdvancedKPIs(superBoardData[0]);
 
         const SuperBoardDashboard = () => {
-            const [selectedMetric, setSelectedMetric] = React.useState('totaleCrossChannelOmzet');
+            const [selectedMetric, setSelectedMetric] = useState('totaleCrossChannelOmzet');
 
             const metrics = [
                 { value: 'totaleCrossChannelOmzet', label: 'Totale Cross-Channel Omzet' },
@@ -245,111 +236,74 @@
                                     </SelectItem>
                                 ))}
                             </Select>
-                            <Recharts.ResponsiveContainer width="100%" height={400}>
-                                <Recharts.LineChart data={superBoardData}>
-                                    <Recharts.CartesianGrid strokeDasharray="3 3" />
-                                    <Recharts.XAxis dataKey="datum" />
-                                    <Recharts.YAxis />
-                                    <Recharts.Tooltip />
-                                    <Recharts.Legend />
-                                    <Recharts.Line type="monotone" dataKey={selectedMetric} stroke="#8884d8" name={metrics.find(m => m.value === selectedMetric).label} />
-                                </Recharts.LineChart>
-                        </Recharts.ResponsiveContainer>
-                    </CardContent>
-                </Card>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Omzet per Marketing Kanaal</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <Recharts.ResponsiveContainer width="100%" height={300}>
-                                <Recharts.PieChart>
-                                    <Recharts.Pie
-                                        data={Object.entries(superBoardData[0].omzetPerMarketingKanaal).map(([name, value]) => ({ name, value }))}
-                                        cx="50%"
-                                        cy="50%"
-                                        labelLine={false}
-                                        outerRadius={80}
-                                        fill="#8884d8"
-                                        dataKey="value"
-                                        label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                                    >
-                                        {Object.entries(superBoardData[0].omzetPerMarketingKanaal).map((entry, index) => (
-                                            <Recharts.Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                                        ))}
-                                    </Recharts.Pie>
-                                    <Recharts.Tooltip />
-                                </Recharts.PieChart>
-                            </Recharts.ResponsiveContainer>
+                            <ResponsiveContainer width="100%" height={400}>
+                                <LineChart data={superBoardData}>
+                                    <CartesianGrid strokeDasharray="3 3" />
+                                    <XAxis dataKey="datum" />
+                                    <YAxis />
+                                    <Tooltip />
+                                    <Legend />
+                                    <Line type="monotone" dataKey={selectedMetric} stroke="#8884d8" name={metrics.find(m => m.value === selectedMetric).label} />
+                                </LineChart>
+                            </ResponsiveContainer>
                         </CardContent>
                     </Card>
 
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Product Categorie Verdeling</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <Recharts.ResponsiveContainer width="100%" height={300}>
-                                <Recharts.BarChart data={Object.entries(superBoardData[0].productCategorieVerdeling).map(([name, value]) => ({ name, value }))}>
-                                    <Recharts.CartesianGrid strokeDasharray="3 3" />
-                                    <Recharts.XAxis dataKey="name" />
-                                    <Recharts.YAxis />
-                                    <Recharts.Tooltip />
-                                    <Recharts.Legend />
-                                    <Recharts.Bar dataKey="value" fill="#8884d8" />
-                                </Recharts.BarChart>
-                            </Recharts.ResponsiveContainer>
-                        </CardContent>
-                    </Card>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Omzet per Marketing Kanaal</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <ResponsiveContainer width="100%" height={300}>
+                                    <PieChart>
+                                        <Pie
+                                            data={Object.entries(superBoardData[0].omzetPerMarketingKanaal).map(([name, value]) => ({ name, value }))}
+                                            cx="50%"
+                                            cy="50%"
+                                            labelLine={false}
+                                            outerRadius={80}
+                                            fill="#8884d8"
+                                            dataKey="value"
+                                            label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                                        >
+                                            {Object.entries(superBoardData[0].omzetPerMarketingKanaal).map((entry, index) => (
+                                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                            ))}
+                                        </Pie>
+                                        <Tooltip />
+                                    </PieChart>
+                                </ResponsiveContainer>
+                            </CardContent>
+                        </Card>
+
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Product Categorie Verdeling</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <ResponsiveContainer width="100%" height={300}>
+                                    <BarChart data={Object.entries(superBoardData[0].productCategorieVerdeling).map(([name, value]) => ({ name, value }))}>
+                                        <CartesianGrid strokeDasharray="3 3" />
+                                        <XAxis dataKey="name" />
+                                        <YAxis />
+                                        <Tooltip />
+                                        <Legend />
+                                        <Bar dataKey="value" fill="#8884d8" />
+                                    </BarChart>
+                                </ResponsiveContainer>
+                            </CardContent>
+                        </Card>
+                    </div>
                 </div>
-
-                <Card className="mt-8">
-                    <CardHeader>
-                        <CardTitle>Cross-Channel Klantreis Analyse</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <Recharts.ResponsiveContainer width="100%" height={400}>
-                            <Recharts.SankeyChart width={960} height={500}>
-                                <Recharts.Sankey
-                                    data={{
-                                        nodes: [
-                                            { name: 'Website Bezoek' },
-                                            { name: 'Product Bekeken' },
-                                            { name: 'Winkelwagen' },
-                                            { name: 'Checkout' },
-                                            { name: 'Shopify Aankoop' },
-                                            { name: 'Bol.com Aankoop' },
-                                            { name: 'Verlaten' },
-                                        ],
-                                        links: [
-                                            { source: 0, target: 1, value: 500000 },
-                                            { source: 1, target: 2, value: 200000 },
-                                            { source: 2, target: 3, value: 150000 },
-                                            { source: 3, target: 4, value: 80000 },
-                                            { source: 3, target: 5, value: 70000 },
-                                            { source: 1, target: 6, value: 300000 },
-                                            { source: 2, target: 6, value: 50000 },
-                                        ],
-                                    }}
-                                    nodePadding={50}
-                                    margin={{ top: 10, right: 10, bottom: 10, left: 10 }}
-                                    link={{ stroke: '#77c878' }}
-                                >
-                                    <Recharts.Label position="right" />
-                                </Recharts.Sankey>
-                            </Recharts.SankeyChart>
-                        </Recharts.ResponsiveContainer>
-                    </CardContent>
-                </Card>
-            </div>
-        );
+            );
+        };
 
         const SuperBoardAI = () => {
-            const [messages, setMessages] = React.useState([]);
-            const [currentMessage, setCurrentMessage] = React.useState('');
-            const [isTyping, setIsTyping] = React.useState(false);
-            const [userInput, setUserInput] = React.useState('');
+            const [messages, setMessages] = useState([]);
+            const [currentMessage, setCurrentMessage] = useState('');
+            const [isTyping, setIsTyping] = useState(false);
+            const [userInput, setUserInput] = useState('');
 
             const conversation = [
                 {
