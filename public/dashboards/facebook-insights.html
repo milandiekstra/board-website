@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopify Insights Dashboard met Chatbot</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- React, ReactDOM, en PropTypes -->
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/prop-types@15.7.2/prop-types.min.js"></script>
+    
+    <!-- Recharts bibliotheek -->
+    <script src="https://unpkg.com/recharts@2.1.9/umd/Recharts.js"></script>
+
+    <!-- Babel standalone voor JSX transformatie -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        .typing-indicator::after {
+            content: '|';
+            animation: blink 1s infinite;
+        }
+        .nav-links {
+            display: none;
+        }
+        @media (min-width: 768px) {
+            .nav-links {
+                display: flex;
+            }
+            .menu-toggle {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <header class="bg-white shadow-md">
+        <div class="container mx-auto px-6 py-3">
+            <nav class="flex justify-between items-center">
+                <div class="flex items-center">
+                    <div class="logo text-2xl font-bold text-gray-800">BOARD</div>
+                    <img src="https://cdn.shopify.com/shopifycloud/brochure/assets/brand-assets/shopify-logo-primary-logo-456baa801ee66a0a435671082365958316831c9960c480451dd0330bcdae304f.svg" alt="Shopify Logo" class="h-8 ml-4">
+                </div>
+                <ul class="nav-links hidden md:flex items-center space-x-6">
+                    <li><a href="#home" class="text-gray-600 hover:text-gray-900">Home</a></li>
+                    <li><a href="#features" class="text-gray-600 hover:text-gray-900">Functies</a></li>
+                    <li><a href="#dashboards" class="text-gray-600 hover:text-gray-900">Dashboards</a></li>
+                    <li><a href="#over-ons" class="text-gray-600 hover:text-gray-900">Over ons</a></li>
+                    <li><a href="#contact" class="text-gray-600 hover:text-gray-900">Contact</a></li>
+                </ul>
+                <a href="#" class="cta-button bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700 transition duration-300">Plan een demo</a>
+                <div class="menu-toggle md:hidden">☰</div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-8">
+        <div id="shopify-insights-dashboard"></div>
+    </main>
+
+    <script type="text/babel">
+        const Card = ({ children, className }) => (
+            <div className={`bg-white shadow-md rounded-lg overflow-hidden ${className}`}>
+                {children}
+            </div>
+        );
+        const CardHeader = ({ children }) => <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">{children}</div>;
+        const CardContent = ({ children }) => <div className="p-6">{children}</div>;
+        const CardTitle = ({ children }) => <h2 className="text-xl font-semibold text-gray-800">{children}</h2>;
+        
+        const Select = ({ children, onValueChange }) => (
+            <select 
+                onChange={(e) => onValueChange(e.target.value)} 
+                className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm rounded-md"
+            >
+                {children}
+            </select>
+        );
+        
+        const SelectItem = ({ value, children }) => <option value={value}>{children}</option>;
+
+        // Fictieve data voor het Shopify Insights dashboard
+        const data = [
+          { datum: '01-08-2024', bestellingen: 150, omzet: 7500, bezoekers: 5000, conversiePercentage: 3.0 },
+          { datum: '02-08-2024', bestellingen: 162, omzet: 8100, bezoekers: 5500, conversiePercentage: 2.95 },
+          { datum: '03-08-2024', bestellingen: 145, omzet: 7250, bezoekers: 4800, conversiePercentage: 3.02 },
+          { datum: '04-08-2024', bestellingen: 170, omzet: 8500, bezoekers: 6000, conversiePercentage: 2.83 },
+          { datum: '05-08-2024', bestellingen: 158, omzet: 7900, bezoekers: 5200, conversiePercentage: 3.04 },
+        ];
+
+        const ChatbotInterface = () => {
+            const [messages, setMessages] = React.useState([]);
+            const [currentMessage, setCurrentMessage] = React.useState('');
+            const [isTyping, setIsTyping] = React.useState(false);
+            const [isChatEnded, setIsChatEnded] = React.useState(false);
+
+            const conversation = [
+                { question: "Wat was de totale omzet deze week?", answer: "De totale omzet deze week was €39.250." },
+                { question: "Hoeveel bestellingen zijn er geplaatst?", answer: "Er zijn in totaal 785 bestellingen geplaatst deze week." },
+                { question: "Wat was het gemiddelde conversiepercentage?", answer: "Het gemiddelde conversiepercentage voor deze periode was 2.97%." }
+            ];
+
+            const simulateTyping = (text, delay = 30) => {
+                return new Promise((resolve) => {
+                    let i = 0;
+                    setIsTyping(true);
+                    const intervalId = setInterval(() => {
+                        setCurrentMessage((prev) => prev + text[i]);
+                        i++;
+                        if (i === text.length) {
+                            clearInterval(intervalId);
+                            setIsTyping(false);
+                            resolve();
+                        }
+                    }, delay);
+                });
+            };
+
+            const runConversation = async () => {
+                for (let i = 0; i < conversation.length; i++) {
+                    const { question, answer } = conversation[i];
+                    await simulateTyping(question);
+                    setMessages((prev) => [...prev, { text: question, isUser: true }]);
+                    setCurrentMessage('');
+                    await new Promise((resolve) => setTimeout(resolve, 500));
+                    await simulateTyping(answer);
+                    setMessages((prev) => [...prev, { text: answer, isUser: false }]);
+                    setCurrentMessage('');
+                    if (i < conversation.length - 1) {
+                        await new Promise((resolve) => setTimeout(resolve, 1000));
+                    }
+                }
+                setIsChatEnded(true);
+            };
+
+            React.useEffect(() => {
+                runConversation();
+            }, []);
+
+            return (
+                <Card className="h-[500px] flex flex-col relative">
+                    <CardHeader>
+                        <CardTitle>Chat met Shopify AI</CardTitle>
+                    </CardHeader>
+                    <CardContent className="flex-grow overflow-y-auto">
+                        <div className="space-y-4">
+                            {messages.map((message, index) => (
+                                <div key={index} className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}>
+                                    <div className={`max-w-3/4 p-2 rounded-lg ${
+                                        message.isUser 
+                                            ? 'bg-green-500 text-white' 
+                                            : 'bg-gray-200 text-black'
+                                    }`}>
+                                        {message.text}
+                                    </div>
+                                </div>
+                            ))}
+                            {isTyping && (
+                                <div className="flex justify-start">
+                                    <div className="max-w-3/4 p-2 rounded-lg bg-gray-200 text-black typing-indicator">
+                                        {currentMessage}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </CardContent>
+                    {isChatEnded && (
+                        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                            <button className="bg-green-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg hover:bg-green-700 transform hover:scale-105 transition duration-300 z-10">
+                                Wil je ook chatten met je data?
+                            </button>
+                        </div>
+                    )}
+                </Card>
+            );
+        };
+
+        const ShopifyInsightsDashboard = () => {
+            const [selectedMetric, setSelectedMetric] = React.useState('omzet');
+
+            const metrics = [
+                { value: 'bestellingen', label: 'Bestellingen' },
+                { value: 'omzet', label: 'Omzet' },
+                { value: 'bezoekers', label: 'Bezoekers' },
+                { value: 'conversiePercentage', label: 'Conversie %' },
+            ];
+
+            const COLORS = ['#004C3F', '#008060', '#95BF47', '#5E8E3E', '#FBF7ED'];
+
+            const formatNumber = (num) => {
+                return new Intl.NumberFormat('nl-NL', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(num);
+            };
+
+            const calculateTotals = () => {
+                return data.reduce((acc, curr) => {
+                    acc.totaalOmzet += curr.omzet;
+                    acc.totaalBestellingen += curr.bestellingen;
+                    acc.totaalBezoekers += curr.bezoekers;
+                    return acc;
+                }, { totaalOmzet: 0, totaalBestellingen: 0, totaalBezoekers: 0 });
+            };
+
+            const totals = calculateTotals();
+            const gemiddeldeConversie = (totals.totaalBestellingen / totals.totaalBezoekers) * 100;
+
+            return (
+                <div className="space-y-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Totale Omzet</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <p className="text-2xl font-semibold text-green-600">{formatNumber(totals.totaalOmzet)}</p>
+                            </CardContent>
+                        </Card>
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Aantal Bestellingen</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <p className="text-2xl font-semibold text-green-600">{totals.totaalBestellingen}</p>
+                            </CardContent>
+                        </Card>
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Bezoekers</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <p className="text-2xl font-semibold text-green-600">{totals.totaalBezoekers}</p>
+                            </CardContent>
+                        </Card>
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Gem. Conversie</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <p className="text-2xl font-semibold text-green-600">{gemiddeldeConversie.toFixed(2)}%</p>
+                            </CardContent>
+                        </Card>
+                    </div>
+
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Metriek over tijd</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <Select onValueChange={setSelectedMetric} defaultValue={selectedMetric}>
+                                {metrics.map((metric) => (
+                                    <SelectItem key={metric.value} value={metric.value}>
+                                        {metric.label}
+                                    </SelectItem>
+                                ))}
+                            </Select>
+                            <Recharts.ResponsiveContainer width="100%" height={300}>
+                                <Recharts.LineChart data={data}>
+                                    <Recharts.CartesianGrid strokeDasharray="3 3" />
+                                    <Recharts.XAxis dataKey="datum" />
+                                    <Recharts.YAxis />
+                                    <Recharts.Tooltip />
+                                    <Recharts.Legend />
+                                    <Recharts.Line type="monotone" dataKey={selectedMetric} stroke="#004C3F" name={metrics.find(m => m.value === selectedMetric).label} />
+                                </Recharts.LineChart>
+                            </Recharts.ResponsiveContainer>
+                        </CardContent>
+                    </Card>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Populaire Producten</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <Recharts.ResponsiveContainer width="100%" height={300}>
+                                    <Recharts.PieChart>
+                                        <Recharts.Pie
+                                            data={[
+                                                { name: 'T-shirt', value: 30 },
+                                                { name: 'Jeans', value: 25 },
+                                                { name: 'Schoenen', value: 20 },
+                                                { name: 'Accessoires', value: 15 },
+                                                { name: 'Jassen', value: 10 }
+                                            ]}
+                                            cx="50%"
+                                            cy="50%"
+                                            labelLine={false}
+                                            outerRadius={80}
+                                            fill="#8884d8"
+                                            dataKey="value"
+                                            label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                                        >
+                                            {data.map((entry, index) => (
+                                                <Recharts.Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                            ))}
+                                        </Recharts.Pie>
+                                        <Recharts.Tooltip />
+                                    </Recharts.PieChart>
+                                </Recharts.ResponsiveContainer>
+                            </CardContent>
+                        </Card>
+
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Top 5 Verkoopkanalen</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <Recharts.ResponsiveContainer width="100%" height={300}>
+                                    <Recharts.BarChart data={[
+                                        { kanaal: "Webshop", omzet: 25000 },
+                                        { kanaal: "Instagram", omzet: 15000 },
+                                        { kanaal: "Facebook", omzet: 12000 },
+                                        { kanaal: "Marktplaats", omzet: 8000 },
+                                        { kanaal: "Google Shopping", omzet: 6000 }
+                                    ]}>
+                                        <Recharts.CartesianGrid strokeDasharray="3 3" />
+                                        <Recharts.XAxis dataKey="kanaal" />
+                                        <Recharts.YAxis />
+                                        <Recharts.Tooltip />
+                                        <Recharts.Bar dataKey="omzet" fill="#004C3F" />
+                                    </Recharts.BarChart>
+                                </Recharts.ResponsiveContainer>
+                            </CardContent>
+                        </Card>
+                    </div>
+                </div>
+            );
+        };
+
+        const CombinedDashboard = () => {
+            return (
+                <div className="space-y-8">
+                    <ChatbotInterface />
+                    <ShopifyInsightsDashboard />
+                </div>
+            );
+        };
+
+        ReactDOM.render(
+            <React.StrictMode>
+                <CombinedDashboard />
+            </React.StrictMode>,
+            document.getElementById('shopify-insights-dashboard')
+        );
+    </script>
+</body>
+</html>
